@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicacion</title>
+    <style>
+        /* ESTILOS GENERALES (CSS) */
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            /* Fondo con estilo degradado */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal de la app simulando la pantalla del dispositivo */
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            height: 90vh;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Estilo para cada "Pantalla" */
+        .screen {
+            display: none; /* Ocultamos todas por defecto */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        /* Clase para mostrar la pantalla activa */
+        .screen.active {
+            display: flex;
+        }
+
+        /* Animación suave al cambiar de pantalla */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ESTILOS DE COMPONENTES */
+        .logo {
+            font-size: 80px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        h1, h2 {
+            color: #4a4a4a;
+        }
+
+        /* Estilos de los botones */
+        .btn {
+            background-color: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            margin: 10px 0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 80%;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .btn-back {
+            background-color: #ccc;
+            color: #333;
+            margin-top: auto; /* Empuja el botón al fondo de la pantalla */
+            margin-bottom: 20px;
+        }
+
+        .btn-back:hover {
+            background-color: #bbb;
+        }
+
+        /* Estilos específicos del Cuestionario */
+        .quiz-container {
+            text-align: left;
+            width: 100%;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+        }
+
+        .result {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+            color: #27ae60;
+        }
+
+        /* Estilo simulado de infografía */
+        .infographic-placeholder {
+            background: #ffeaa7;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed #fdcb6e;
+            margin-bottom: 20px;
+        }
+
+        /* Contenedor con barra de desplazamiento para el autor */
+        .scrollable-content {
+            width: 100%;
+            max-height: 65vh; /* Altura maxima */
+            overflow-y: auto; /* Barra vertical */
+            text-align: left; /* AAlinear textos */
+            padding-right: 10px; /* Borde para la barra */
+            margin-bottom: 15px;
+        }
+
+        /* Estilo para las imagenes */
+        .scrollable-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- Pantalla de inicio -->
+        <div id="screen-home" class="screen active">
+            <img src="https://i.pinimg.com/736x/35/b5/9d/35b59d57f93cc1a8b3cf5c55fe34d4ac.jpg" height="25%" width="30%"/>
+
+            <h1>Bienvenido</h1>
+            <p>Aplicacion increible</p>
+            <button class="btn" onclick="goToScreen('screen-menu')">Entrar</button>
+        </div>
+
+        <!-- Pantalla de seleccion -->
+        <div id="screen-menu" class="screen">
+            <h2>Menú Principal</h2>
+            <!-- Botones ordenados descendentemente (por el flex-direction: column del CSS) -->
+            <button class="btn" onclick="goToScreen('screen-infographic')">Infografía</button>
+            <button class="btn" onclick="goToScreen('screen-quiz')">Cuestionario</button>
+            <button class="btn" onclick="goToScreen('screen-author')">Acerca del Mi</button>
+
+            <button class="btn btn-back" onclick="goToScreen('screen-home')">⬅ Regresar al Inicio</button>
+        </div>
+
+        <!-- Pantalla de infografia -->
+        <div id="screen-infographic" class="screen">
+            <div class="scrollable-content">
+                <h2>Infografía</h2>
+                <img src="https://i.pinimg.com/736x/65/9a/86/659a86589b6ab98130b3e13e241e29f3.jpg"/>
+            </div>
+
+            <button class="btn btn-back" onclick="goToScreen('screen-menu')">⬅ Regresar</button>
+        </div>
+
+        <!-- PANTALLA 4: CUESTIONARIO -->
+        <div id="screen-quiz" class="screen">
+            <h2>Cuestionario</h2>
+            <div class="quiz-container">
+                <div class="question">
+                    <p><b>1. ¿Cuál es la definición de ser proactivo?</b></p>
+                    <label><input type="radio" name="q1" value="falso"> Tener mucho dinero</label><br>
+                    <label><input type="radio" name="q1" value="falso"> Hacer las cosas que te gustan</label><br>
+                    <label><input type="radio" name="q1" value="correcto"> Tomar decisiones que afectarán en nuestra vida</label>
+                </div>
+
+                <div class="question">
+                    <p><b>2. Completa la frase: <br> Comenzar con un fin en ______</b></p>
+                    <label><input type="radio" name="q2" value="falso"> Concreto</label><br>
+                    <label><input type="radio" name="q2" value="falso"> el mundo</label><br>
+                    <label><input type="radio" name="q2" value="correcto"> mente</label><br>
+                    <label><input type="radio" name="q2" value="falso"> el estado</label>
+                </div>
+
+                <div class="question">
+                    <p><b>3. ¿Cómo se le llama a la importancia de cada cosa?</b></p>
+                    <label><input type="radio" name="q3" value="falso"> Corriente</label><br>
+                    <label><input type="radio" name="q3" value="correcto"> Prioridades</label><br>
+                    <label><input type="radio" name="q3" value="falso"> Primicias</label><br>
+                    <label><input type="radio" name="q3" value="falso"> Primores</label>
+                </div>
+
+                <div class="question">
+                    <p><b>4. Al realizar un trato con alguien debemos pensar en: </b></p>
+                    <label><input type="radio" name="q4" value="falso"> Beneficio personal</label><br>
+                    <label><input type="radio" name="q4" value="falso"> Estafar a la otra parte</label><br>
+                    <label><input type="radio" name="q4" value="falso"> Buscar beneficio ajeno</label><br>
+                    <label><input type="radio" name="q4" value="correcto"> Beneficio mutuo</label>
+                </div>
+
+                <div class="question">
+                    <p><b>5. Para poder ser comprendidos con otras personas es necesario: </b></p>
+                    <label><input type="radio" name="q5" value="falso"> Saber hablar</label><br>
+                    <label><input type="radio" name="q5" value="falso"> Tener un vocabulario amplio</label><br>
+                    <label><input type="radio" name="q5" value="falso"> Tener contacto visual</label><br>
+                    <label><input type="radio" name="q5" value="correcto"> Comprender a la otra persona</label>
+                </div>
+
+                <div class="question">
+                    <p><b>6. Afilar ___ _______ </b></p>
+                    <label><input type="radio" name="q6" value="falso"> El martillo</label><br>
+                    <label><input type="radio" name="q6" value="falso"> El machete</label><br>
+                    <label><input type="radio" name="q6" value="falso"> La lanza</label><br>
+                    <label><input type="radio" name="q6" value="correcto"> La sierra</label>
+                </div>
+            </div>
+
+            <button class="btn" onclick="checkQuiz()">Revisar y Calificar</button>
+            <div id="quiz-result" class="result"></div>
+
+            <button class="btn btn-back" onclick="goToScreen('screen-menu')">⬅ Regresar</button>
+        </div>
+
+<!-- PANTALLA 5: ACERCA DEL AUTOR -->
+        <div id="screen-author" class="screen">
+            <h2>Acerca de Mí</h2>
+
+            <div class="scrollable-content">
+                <div><img src="imagen.jpg" alt="Foto principal" title="Yo" /></div>
+
+                <p><b>Nombre:</b> David Esau López Ordoñez</p>
+                <p>
+                    <b>Descripción:</b><br>
+                    - Me gusta probar y crear cosas curiosas.<br>
+                    - Me agrada aprender cosas nuevas y especializarme en nuevas habilidades.<br>
+                </p>
+                <p>
+                    <b>Gustos:</b><br>
+                    - Me gusta jugar videojuegos.<br>
+                    - Me gusta dibujar.<br>
+                    - Me gusta pasar tiempo con mis amigos.
+                </p>
+                <p> <b>Contacto:</b> <br> email: davesau.lopez@gmail.com</p>
+
+                <img src="Foto 1.jpg" title="Foto mia"/>
+                <img src="Foto 2.jpg" title="Foto durante curso de verano"/>
+                <img src="Foto 3.jpg" title="Foto con amigos"/>
+            </div>
+
+            <button class="btn btn-back" onclick="goToScreen('screen-menu')">⬅ Regresar</button>
+        </div>
+
+    </div>
+
+    <!-- LÓGICA -->
+    <script>
+        // Función para cambiar de pantalla
+        function goToScreen(screenId) {
+            // 1. Buscamos todas las pantallas y les quitamos la clase "active" para ocultarlas
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            // 2. Buscamos la pantalla que queremos mostrar y le agregamos la clase "active"
+            document.getElementById(screenId).classList.add('active');
+
+            // Si salimos del quiz, limpiamos el resultado por si vuelve a entrar
+            if(screenId !== 'screen-quiz') {
+                document.getElementById('quiz-result').innerText = "";
+            }
+        }
+
+        // Función para evaluar el cuestionario
+        function checkQuiz() {
+            let score = 0;
+            const totalQuestions = 6;
+
+            // Revisamos cada pregunta
+            const p1 = document.querySelector('input[name="q1"]:checked');
+            if (p1 && p1.value === "correcto") score++;
+
+            const p2 = document.querySelector('input[name="q2"]:checked');
+            if (p2 && p2.value === "correcto") score++;
+
+            const p3 = document.querySelector('input[name="q3"]:checked');
+            if (p3 && p3.value === "correcto") score++;
+
+            const p4 = document.querySelector('input[name="q4"]:checked');
+            if (p4 && p4.value === "correcto") score++;
+
+            const p5 = document.querySelector('input[name="q5"]:checked');
+            if (p5 && p5.value === "correcto") score++;
+
+            const p6 = document.querySelector('input[name="q6"]:checked');
+            if (p6 && p6.value === "correcto") score++;
+
+            // Mostramos el resultado en pantalla
+            const resultDiv = document.getElementById('quiz-result');
+            resultDiv.innerText = `Obtuviste ${score} de ${totalQuestions} respuestas correctas.`;
+
+            if (score === totalQuestions) {
+                resultDiv.style.color = "#27ae60"; // Verde si es perfecto
+            } else {
+                resultDiv.style.color = "#e74c3c"; // Rojo si tuvo errores
+            }
+        }
+    </script>
+</body>
+</html>

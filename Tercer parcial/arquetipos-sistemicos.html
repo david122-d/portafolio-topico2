@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Los 10 arquetipos sistémicos</title>
+<style>
+  :root{
+    --c1:#CDEDF2; --c2:#90D7E3; --c3:#53C1D3; --c4:#2C9BAD; --c5:#1D6570;
+    --ink:#123f47; --card:#ffffff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--c1);color:var(--ink);line-height:1.6}
+
+  /* 1. Barra de pestañas */
+  .tabbar{position:sticky;top:0;z-index:20;background:var(--c5);display:flex;justify-content:center;gap:6px;padding:10px 12px 0;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+  .tab{border:0;cursor:pointer;font:inherit;font-weight:600;font-size:.98rem;padding:11px 22px;border-radius:12px 12px 0 0;background:var(--c4);color:#fff;transition:background .2s}
+  .tab:hover{background:var(--c3)}
+  .tab[aria-selected="true"]{background:var(--c1);color:var(--c5)}
+
+  .page{display:none;max-width:1000px;margin:0 auto;padding:28px 18px 60px}
+  .page.active{display:block}
+
+  /* 2. Título */
+  h1{text-align:center;color:var(--c5);font-size:clamp(1.8rem,4.5vw,2.8rem);letter-spacing:.3px;margin-bottom:18px}
+  h1::after{content:"";display:block;width:90px;height:5px;border-radius:5px;background:var(--c3);margin:10px auto 0}
+
+  /* 3. Foto */
+  .hero{border-radius:18px;overflow:hidden;border:4px solid var(--c2);background:var(--c2);box-shadow:0 8px 22px rgba(29,101,112,.25);margin-bottom:28px}
+  .hero img{display:block;width:100%;height:auto;object-fit:contain}
+  .hero .ph{display:none;padding:70px 20px;text-align:center;color:var(--c5);font-weight:600}
+
+  /* 4. Contenido */
+  .index{background:var(--card);border-radius:16px;padding:18px;border:2px solid var(--c2);margin-bottom:26px}
+  .index h2{color:var(--c5);font-size:1.15rem;margin-bottom:12px}
+  .index-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
+  .index-grid a{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--c5);background:var(--c1);border-radius:10px;padding:9px 12px;font-size:.93rem;font-weight:600;transition:.2s}
+  .index-grid a:hover{background:var(--c4);color:#fff;transform:translateX(3px)}
+  .index-grid b{flex:none;width:28px;height:28px;border-radius:50%;background:var(--c4);color:#fff;display:grid;place-items:center;font-size:.85rem}
+  .index-grid a:hover b{background:#fff;color:var(--c5)}
+
+  .arq{background:var(--card);border-radius:18px;padding:22px;margin-bottom:22px;border-left:8px solid var(--c4);box-shadow:0 4px 14px rgba(29,101,112,.15);scroll-margin-top:76px;transition:box-shadow .3s}
+  .arq.flash{box-shadow:0 0 0 4px var(--c3),0 4px 14px rgba(29,101,112,.15)}
+  .arq-head{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+  .num{flex:none;width:44px;height:44px;border-radius:50%;background:var(--c5);color:#fff;display:grid;place-items:center;font-weight:700;font-size:1.15rem}
+  .arq h3{color:var(--c5);font-size:1.3rem;line-height:1.25}
+  .arq p.desc{margin-bottom:14px}
+  .label{font-weight:700;color:var(--c5);display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
+  .ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .ex{border-radius:12px;padding:12px 14px;font-size:.95rem}
+  .ex.real{background:var(--c1);border:2px solid var(--c2)}
+  .ex.cot{background:#eaf8fa;border:2px dashed var(--c3)}
+  .ex.solo{grid-column:1/-1}
+  .top{display:block;margin:6px auto 0;border:0;background:var(--c4);color:#fff;font:inherit;font-weight:600;padding:9px 20px;border-radius:20px;cursor:pointer}
+  .top:hover{background:var(--c5)}
+
+  /* Resumen */
+  .intro{background:var(--c5);color:#fff;border-radius:16px;padding:20px 22px;margin-bottom:22px}
+  .block{background:var(--card);border-radius:16px;padding:20px 22px;margin-bottom:18px;border-top:6px solid var(--c3);box-shadow:0 4px 14px rgba(29,101,112,.12)}
+  .block h2{color:var(--c5);font-size:1.3rem;margin-bottom:8px}
+  .block h3{color:var(--c4);font-size:1.02rem;margin:12px 0 2px}
+  .block ul{padding-left:20px}
+  .block li{margin:4px 0}
+  .cards5{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:8px}
+  .cards5 div{background:var(--c1);border-radius:12px;padding:12px 14px;border:2px solid var(--c2)}
+  .cards5 div.star{background:var(--c5);color:#fff;border-color:var(--c5)}
+  .cards5 b{display:block;color:var(--c5);margin-bottom:3px}
+  .cards5 div.star b{color:var(--c1)}
+
+  @media(max-width:640px){
+    .ex-grid{grid-template-columns:1fr}
+    .tab{padding:10px 14px;font-size:.9rem}
+    .arq{padding:16px}
+  }
+</style>
+</head>
+<body>
+
+<!-- 1. BARRA DE PESTAÑAS -->
+<nav class="tabbar" role="tablist">
+  <button class="tab" role="tab" aria-selected="true" data-target="p-arq">Los 10 arquetipos</button>
+  <button class="tab" role="tab" aria-selected="false" data-target="p-res">La Quinta Disciplina</button>
+</nav>
+
+<!-- PÁGINA 1 -->
+<main id="p-arq" class="page active">
+  <!-- 2. TÍTULO -->
+  <h1>Los 10 arquetipos sistémicos</h1>
+
+  <!-- 3. FOTO -->
+  <div class="hero">
+    <img src="img1.png" alt="Los 10 arquetipos sistémicos"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div class="ph">Coloca el archivo <b>img1.png</b> en la misma carpeta que este archivo HTML.</div>
+  </div>
+
+  <!-- 4. CONTENIDO -->
+  <section class="index">
+    <h2>Índice · toca un arquetipo para ir directo a él</h2>
+    <div class="index-grid" id="index"></div>
+  </section>
+  <section id="lista"></section>
+</main>
+
+<!-- PÁGINA 2 -->
+<main id="p-res" class="page">
+  <h1>La Quinta Disciplina</h1>
+
+  <div class="intro">
+    <p><b>Peter Senge</b> propone en este libro una idea sencilla: las organizaciones que mejor funcionan son las que aprenden. Les llama <b>organizaciones inteligentes</b>: lugares donde la gente amplía continuamente su capacidad de crear los resultados que desea, donde nacen nuevas formas de pensar y donde todos aprenden a aprender en conjunto.</p>
+  </div>
+
+  <section class="block">
+    <h2>El problema de fondo</h2>
+    <p>Desde pequeños nos enseñan a dividir los problemas en pedazos para entenderlos. Parece práctico, pero tiene un costo: dejamos de ver las consecuencias de nuestros actos y perdemos la sensación de formar parte de un todo más grande. El libro busca romper esa ilusión de que el mundo está hecho de fuerzas separadas.</p>
+    <p style="margin-top:8px">Senge recuerda que muchas empresas desaparecen antes de cumplir cuarenta años, y que casi siempre las señales de alerta estaban a la vista. La organización, como conjunto, no supo reconocerlas.</p>
+  </section>
+
+  <section class="block">
+    <h2>Las cinco disciplinas</h2>
+    <p>Son cinco herramientas que se desarrollaron por separado, pero que funcionan mejor juntas:</p>
+    <div class="cards5">
+      <div><b>1. Dominio personal</b>Aclarar y profundizar continuamente lo que de verdad nos importa, concentrar energías, tener paciencia y ver la realidad con objetividad. Una organización no aprende más que las personas que la forman.</div>
+      <div><b>2. Modelos mentales</b>Son los supuestos, generalizaciones e imágenes muy arraigadas que influyen en cómo entendemos el mundo y actuamos, casi siempre sin darnos cuenta. Se trata de sacarlos a la luz y cuestionarlos.</div>
+      <div><b>3. Visión compartida</b>Construir entre todos una imagen del futuro que de verdad se quiera lograr. Cuando la visión es genuina, la gente participa por convicción y no por obligación.</div>
+      <div><b>4. Aprendizaje en equipo</b>Empieza con el <i>diálogo</i>: dejar a un lado los supuestos y pensar en conjunto. El equipo, y no el individuo, es la unidad básica de aprendizaje de una organización.</div>
+      <div class="star"><b>5. Pensamiento sistémico</b>La quinta disciplina, la que integra a las demás. Enseña a ver totalidades, relaciones y patrones de cambio en lugar de fotos aisladas, y a entender las estructuras que están detrás de lo que ocurre.</div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Las siete barreras para el aprendizaje</h2>
+    <p>Senge las llama discapacidades de aprendizaje, y casi todas las organizaciones tienen alguna:</p>
+    <ul>
+      <li><b>“Yo soy mi puesto”:</b> confundimos nuestra identidad con nuestra tarea.</li>
+      <li><b>“El enemigo externo”:</b> culpamos a algo de afuera de lo que en realidad también depende de nosotros.</li>
+      <li><b>La ilusión de hacerse cargo:</b> actuar con agresividad creyendo que eso es proactividad.</li>
+      <li><b>La fijación en los hechos:</b> mirar solo eventos aislados y no los procesos de fondo.</li>
+      <li><b>La parábola de la rana hervida:</b> no notar los cambios lentos y graduales que nos ponen en peligro.</li>
+      <li><b>La ilusión de que “se aprende con la experiencia”:</b> no podemos aprender de decisiones cuyas consecuencias ocurren lejos en el tiempo o el espacio.</li>
+      <li><b>El mito del equipo administrativo:</b> equipos de gente brillante que, bajo presión, defienden sus posturas en vez de aprender juntos.</li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2>El pensamiento sistémico en acción</h2>
+    <p>Para ver las estructuras, el libro usa un lenguaje basado en la <b>realimentación</b>: los procesos reforzadores, que amplifican los cambios, y los procesos compensadores, que buscan equilibrio. También considera las <b>demoras</b>, que hacen que la causa y el efecto no se noten juntos.</p>
+    <p style="margin-top:8px">A partir de esos elementos aparecen los <b>arquetipos sistémicos</b>: patrones que se repiten una y otra vez en empresas, familias y sociedades. Reconocerlos permite encontrar el <b>punto de apalancamiento</b>, esa acción pequeña y bien enfocada que puede generar cambios grandes y duraderos. Son justamente los que se presentan en la primera pestaña.</p>
+  </section>
+
+  <section class="block">
+    <h2>Las leyes de la quinta disciplina</h2>
+    <p>Senge resume lo aprendido en once ideas fáciles de recordar:</p>
+    <ul>
+      <li>Los problemas de hoy derivan de las “soluciones” de ayer.</li>
+      <li>Cuanto más se presiona, más presiona el sistema.</li>
+      <li>La conducta mejora antes de empeorar.</li>
+      <li>El camino fácil lleva al mismo lugar.</li>
+      <li>La cura puede ser peor que la enfermedad.</li>
+      <li>Lo más rápido es lo más lento.</li>
+      <li>La causa y el efecto no están próximos en el tiempo y el espacio.</li>
+      <li>Los cambios pequeños pueden producir resultados grandes, pero las zonas de mayor apalancamiento suelen ser las menos obvias.</li>
+      <li>Se pueden alcanzar dos metas aparentemente contradictorias.</li>
+      <li>Dividir un elefante por la mitad no genera dos elefantes pequeños.</li>
+      <li>No hay culpa: nosotros y la causa de nuestros problemas formamos parte de un mismo sistema.</li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2>La idea central</h2>
+    <p>Los problemas más difíciles rara vez tienen un culpable. Surgen de la forma en que las partes se relacionan entre sí. Cuando aprendemos a ver esas relaciones, y trabajamos juntos con una visión compartida y con la mente abierta, dejamos de ser víctimas de las circunstancias y empezamos a participar en la creación de nuestro futuro.</p>
+  </section>
+</main>
+
+<script>
+const ARQ = [
+ {t:"Compensación entre proceso y demora",
+  d:"Ocurre cuando una persona, grupo u organización toma decisiones o acciones para alcanzar una meta, pero el sistema reacciona con un retraso (demora) en la realimentación. Al no percibir un progreso inmediato debido a esa demora, el actor suele sobredimensionar sus medidas correctivas, lo que a su vez provoca una oscilación inestable o un exceso en sentido contrario.",
+  r:["Bienes raíces y construcción","Los promotores inmobiliarios observan alta demanda y escasez de viviendas, por lo que inician la construcción de muchos edificios nuevos. Sin embargo, debido al tiempo que toma construir (demora), para cuando las propiedades salen al mercado la demanda ya se ha cubierto y se produce una sobreoferta masiva."],
+  c:["Ejemplo cotidiano","Ajustar la temperatura de una ducha con grifos de respuesta lenta: uno gira la llave hacia el agua caliente, no siente calor inmediato, gira de más, y repentinamente el agua quema."]},
+ {t:"Límites del crecimiento",
+  d:"Un proceso inicial de crecimiento o expansión acelerada se alimenta de sí mismo mediante circuitos de realimentación positiva. No obstante, el sistema llega de manera inevitable a un límite o condición limitativa (ya sea por escasez de recursos, fatiga o resistencia externa) que frena el progreso. Si se insiste en presionar el crecimiento sin atender el límite, el sistema puede entrar en un colapso.",
+  r:["Expansión empresarial y cultura","Una startup exitosa crece de manera vertiginosa contratando a cientos de personas rápidamente. Sin embargo, al superar cierto tamaño, la empresa pierde su agilidad original y los nuevos empleados ya no comparten los valores de los fundadores, estancando la productividad hasta que se ajusta la estructura organizacional."],
+  c:["Aprendizaje de habilidades","Al practicar un deporte como el tenis, se progresa muy rápido al principio por la adquisición de confianza, pero pronto se choca con un límite técnico natural que exige desaprender vicios y adoptar técnicas complejas."]},
+ {t:"Desplazamiento de la carga",
+  d:"Ante un problema, se recurre a una solución sintomática o superficial que ofrece alivio inmediato. El peligro radica en que, al volverse dependientes de esta solución rápida, se descuidan o dejan de aplicar las medidas correctivas fundamentales. Con el tiempo, las aptitudes para resolver el problema real se atrofian, generando una profunda dependencia.",
+  r:["Gestión del estrés laboral","Un profesional experimenta altos niveles de estrés en su trabajo y recurre constantemente al consumo excesivo de alcohol o medicamentos para relajarse (solución sintomática), en lugar de reestructurar su carga de trabajo o cambiar de hábitos (solución fundamental). Con el tiempo, su capacidad de gestionar el estrés de forma natural disminuye."],
+  c:["Estrategia comercial","Una empresa con baja penetración de mercado opta por dar descuentos agresivos continuos a sus clientes actuales para cumplir las cuotas mensuales (solución rápida), descuidando la innovación de productos o la búsqueda de nuevos mercados (solución fundamental)."]},
+ {t:"Caso especial: Desplazamiento de la carga hacia la intervención",
+  d:"Es una variante del arquetipo anterior donde interviene un agente externo para solucionar los problemas de un sistema. La intervención es tan exitosa a corto plazo que los actores internos se vuelven pasivos, jamás aprenden a resolver sus propios conflictos y pierden sus capacidades operativas.",
+  r:["Consultoría externa vs. desarrollo interno","Una compañía contrata de manera permanente a consultores externos cada vez que surge una crisis financiera o de procesos. Aunque los consultores resuelven el problema inmediato, el personal interno se vuelve totalmente dependiente y pierde la capacidad analítica para resolver futuros tropiezos por sí mismo."],
+  c:["Ayuda humanitaria mal canalizada","Programas de asistencia alimentaria masiva a regiones en desarrollo que, si bien salvan vidas a corto plazo, desincentivan la producción agrícola local y generan una dependencia estructural a largo plazo."]},
+ {t:"Erosión de metas",
+  d:"Corresponde a una estructura de desplazamiento de la carga donde la solución a corto plazo para lidiar con una brecha de desempeño consiste en reducir o relajar los estándares y metas fundamentales de la organización.",
+  r:["Estándares de calidad en manufactura","Una empresa de software sufre retrasos constantes en sus entregas debido a fallas de planificación. En lugar de corregir los procesos de desarrollo, la gerencia opta por alargar sistemáticamente los plazos prometidos al cliente y tolerar más errores en el código. La meta de calidad inicial se erosiona de forma gradual."],
+  c:["Gestión pública","Gobiernos que reducen sus indicadores y objetivos de control de contaminación o de déficit fiscal ante la presión coyuntural, en lugar de aplicar políticas fiscales o ambientales estrictas."]},
+ {t:"Escalada",
+  d:"Dos partes (personas, empresas o naciones) perciben que su seguridad y bienestar dependen de mantener una ventaja competitiva sobre la otra. Cuando una de las partes da un paso para ganar ventaja, la otra lo interpreta como una amenaza directa y responde con mayor agresividad. Se genera una espiral viciosa simétrica de acciones defensivas/agresivas que se sale del control de ambos bandos.",
+  r:["Guerras de precios comerciales","Dos cadenas de supermercados compiten en la misma zona. La tienda A decide bajar un 10% los precios de la canasta básica para atraer clientes. La tienda B lo interpreta como un ataque a su supervivencia y reduce sus precios un 20%. Esto desata una guerra de precios donde ambas terminan operando con pérdidas financieras insostenibles."],
+  c:["Carreras armamentistas o disputas legales","Países que aumentan su presupuesto militar de forma recíproca por desconfianza mutua, o litigios legales prolongados donde los demandantes y acusados escalan los honorarios de abogados hasta arruinar a ambas partes."]},
+ {t:"Éxito para quien tiene éxito",
+  d:"Dos actividades, proyectos o personas compiten por el uso de un recurso limitado y compartido. Si una de las partes obtiene una ventaja o éxito inicial por cualquier motivo fortuito, recibe mayor asignación de recursos, lo que debilita y priva de apoyo a la otra, garantizando su declive.",
+  r:["Asignación de presupuestos internos","Una corporación multinacional tiene dos divisiones de productos compitiendo por fondos de expansión. La división de tecnología digital tiene un arranque ligeramente mejor en el mercado debido a una coyuntura temporal y se le asigna el 80% del presupuesto de I+D. La otra división se queda sin recursos, empeora su desempeño y termina siendo cerrada, a pesar de que ambas tenían potencial similar al inicio."],
+  c:["Entornos educativos","Un estudiante tímido tiene un tropiezo al inicio del año escolar y recibe una calificación baja; el profesor lo etiqueta inconscientemente como \"lento\" y le dedica menos atención, lo que deteriora aún más su rendimiento en comparación con alumnos más extrovertidos."]},
+ {t:"Tragedia del terreno común",
+  d:"Múltiples individuos o entidades hacen uso intensivo de un recurso común y limitado, guiados exclusivamente por sus intereses a corto plazo. Al principio, cada actor obtiene beneficios individuales gratificantes, pero la acumulación de uso sobrecarga el sistema hasta agotar o destruir por completo el recurso compartido, perjudicando a todos.",
+  r:["Sobreexplotación pesquera","Diferentes flotas pesqueras comerciales explotan libremente una zona marítima internacional. Como cada barco busca maximizar su captura diaria, la pesca excesiva destruye la biomasa reproductora, colapsando la población de peces y arruinando a la industria pesquera en su conjunto a largo plazo."],
+  c:["Recursos corporativos compartidos","Varios departamentos de una empresa utilizan una misma bolsa de horas de soporte técnico especializado sin restricciones de priorización. Al saturar el recurso con peticiones menores, el servicio colapsa y se vuelve inútil para toda la organización."]},
+ {t:"Soluciones rápidas que fallan (\"Apaguen ese incendio\")",
+  d:"Se aplica una solución que resuelve el síntoma de manera inmediata y muy eficaz, pero genera efectos secundarios indeseados y demorados que terminan empeorando el problema original, obligando a aplicar la misma solución con mayor intensidad.",
+  r:["Recorte drástico de mantenimiento preventivo","Una empresa manufacturera atraviesa apuros de liquidez y decide suspender temporalmente el mantenimiento preventivo de su maquinaria para ahorrar costos (solución rápida). Esto mejora el flujo de caja a corto plazo, pero al cabo de unos meses las máquinas fallan con mucha mayor frecuencia, generando paradas de producción costosas, pérdida de clientes y una presión financiera aún mayor."],
+  c:["Finanzas personales","Pedir un préstamo rápido con intereses elevados para pagar las deudas de otra tarjeta de crédito, lo que incrementa el endeudamiento futuro de forma exponencial."]},
+ {t:"Crecimiento y subinversión",
+  d:"El crecimiento de la demanda se acerca a un límite de capacidad operativa. Para sostener el crecimiento, la organización debería realizar inversiones audaces y rápidas en infraestructura o personal. Sin embargo, debido al miedo al riesgo o al deseo de conservar recursos, se subinvierte y se rebajan las pautas de calidad para justificar la falta de capacidad, lo que desencadena un deterioro en el desempeño y una caída definitiva de la demanda.",
+  r:["Colapso de aerolíneas de bajo costo","Una aerolínea experimenta un crecimiento explosivo en la demanda de pasajeros. En lugar de invertir fuertemente en ampliar su flota, capacitar personal de tierra y mejorar sus sistemas de reservas, la gerencia recorta gastos y subinvierte para exprimir los márgenes. Como resultado, la calidad del servicio decae drásticamente, los vuelos se retrasan sistemáticamente y los clientes optan por la competencia, hundiendo el negocio."],
+  c:null}
+];
+
+const index = document.getElementById('index');
+const lista = document.getElementById('lista');
+
+ARQ.forEach((a, i) => {
+  const n = i + 1;
+  index.insertAdjacentHTML('beforeend',
+    `<a href="#arq-${n}" data-n="${n}"><b>${n}</b>${a.t}</a>`);
+
+  const exReal = `<div class="ex real ${a.c ? '' : 'solo'}"><span class="label">Ejemplo real · ${a.r[0]}</span>${a.r[1]}</div>`;
+  const exCot = a.c ? `<div class="ex cot"><span class="label">${a.c[0]}</span>${a.c[1]}</div>` : '';
+
+  lista.insertAdjacentHTML('beforeend', `
+    <article class="arq" id="arq-${n}">
+      <div class="arq-head"><div class="num">${n}</div><h3>${a.t}</h3></div>
+      <p class="desc"><span class="label">Descripción detallada</span>${a.d}</p>
+      <div class="ex-grid">${exReal}${exCot}</div>
+      <button class="top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Volver al índice</button>
+    </article>`);
+});
+
+// Índice: ir directo al arquetipo elegido
+index.addEventListener('click', e => {
+  const link = e.target.closest('a');
+  if (!link) return;
+  e.preventDefault();
+  const el = document.getElementById('arq-' + link.dataset.n);
+  el.scrollIntoView({behavior:'smooth', block:'start'});
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 1600);
+});
+
+// Pestañas
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', 'false'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    tab.setAttribute('aria-selected', 'true');
+    document.getElementById(tab.dataset.target).classList.add('active');
+    window.scrollTo({top:0});
+  });
+});
+</script>
+</body>
+</html>

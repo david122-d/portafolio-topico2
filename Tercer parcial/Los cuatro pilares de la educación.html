@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Los cuatro pilares de la educación</title>
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;600;700&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--c1:#DCF1DA;--c2:#F2FFF0;--c3:#B4E3A3;--ink:#1d3a1b;--ink2:#3d5c3a;--line:#8fc47c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--c2);color:var(--ink);font:400 17px/1.6 Figtree,system-ui,sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--c1);border-bottom:2px solid var(--c3);padding:10px 16px 12px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--c1);z-index:10}
+.brand{display:block;margin:0 auto 8px;max-width:1000px;font:700 15px Literata,Georgia,serif;color:var(--ink);background:none;border:0;cursor:pointer;text-align:left;padding:2px 0}
+nav{display:flex;gap:8px;max-width:1000px;margin:0 auto;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+nav button{flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:2px solid var(--c3);background:var(--c2);color:var(--ink);font:700 16px Figtree,sans-serif;cursor:pointer;transition:background .25s,transform .25s,border-color .25s}
+nav button:hover{background:var(--c3);transform:translateY(-2px)}
+nav button[aria-selected=true]{background:var(--ink);color:var(--c2);border-color:var(--ink)}
+nav button.vacio{opacity:.6}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+main{max-width:1000px;margin:0 auto;padding:28px 16px 64px}
+.vista{animation:entra .45s ease both}
+@keyframes entra{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+h1,h2,h3{font-family:Literata,Georgia,serif;line-height:1.2;margin:0}
+h1{font-size:clamp(30px,5vw,46px);max-width:18ch}
+.lead{color:var(--ink2);max-width:60ch;margin:12px 0 28px}
+.pilares{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.pilar{background:var(--c1);border:2px solid var(--c3);border-radius:20px;padding:20px;transition:transform .3s,background .3s}
+.pilar:hover{transform:translateY(-4px);background:var(--c3)}
+.pilar h2{font-size:22px;margin-bottom:8px}
+.pilar p{margin:0;font-size:16px}
+.pilar:nth-child(2){border-radius:20px 20px 4px 20px}
+.pilar:nth-child(3){border-radius:20px 4px 20px 20px}
+.pagina{display:grid;gap:24px;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);align-items:start}
+.pagina h1{font-size:clamp(28px,4.5vw,40px);max-width:none;margin-bottom:6px}
+.sub{font:600 18px Literata,Georgia,serif;margin:22px 0 8px}
+ul{padding-left:20px;margin:0}
+.texto h2.dom{font-size:21px;margin:30px 0 4px;padding:8px 14px;background:var(--c1);border-left:6px solid var(--c3);border-radius:0 14px 14px 0}
+li{margin:0 0 10px}
+.texto p{margin:0 0 14px;max-width:62ch}
+dl{margin:0;display:flex;flex-direction:column;gap:12px;position:sticky;top:130px}
+.def{background:var(--c1);border:2px solid var(--c3);border-radius:22px;padding:14px 18px}
+.def dt{font:700 16px Literata,Georgia,serif}
+.def dd{margin:4px 0 0;font-size:15px;color:var(--ink2)}
+.vacio-msg{background:var(--c1);border:2px dashed var(--c3);border-radius:22px;padding:28px;max-width:520px}
+@media(max-width:760px){.pagina{grid-template-columns:1fr}dl{position:static}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header>
+  <button class="brand" id="inicio" type="button">Los cuatro pilares de la educación</button>
+  <nav id="tabs" role="tablist" aria-label="Páginas del 1 al 11"></nav>
+</header>
+<main id="vista" tabindex="-1"></main>
+<script>
+var pilares=[
+["Aprender a conocer","Combinar una cultura general suficientemente amplia con la posibilidad de profundizar los conocimientos en un pequeño número de materias."],
+["Aprender a hacer","Adquirir una competencia que capacite al individuo para hacer frente a gran número de situaciones y trabajar en equipo."],
+["Aprender a vivir juntos","Desarrollar la comprensión del otro y la percepción de las formas de interdependencia."],
+["Aprender a ser","Lograr que florezca mejor la propia personalidad y se esté en condiciones de obrar con creciente capacidad de autonomía, de juicio y de responsabilidad personal, respetando la diversidad."]];
+
+var paginas={
+1:{t:"Dominio de la interdependencia",sub:[
+["Escuchar a otros",["Callarse cuando el otro habla","Parafrasear","Identificar los intereses que están detrás"]],
+["Legitimar a otros",["Aceptar diferentes puntos de vista","Dar permiso","Aceptar el rol del otro","Fundar los juicios del otro"]],
+["Construir redes de ayuda",["Hacer ofertas","Considerar expectativas del otro","Seducir al otro","Seguimiento de compromisos","Negociación ganar-ganar"]],
+["Capacidad de evaluar",["Declarar roles","Evaluar las competencias de los otros","Realizar juicios que aportan valor","Evaluar áreas de confianza y desconfianza en el equipo"]]],
+defs:[["Interdependencia","Relación en la que las personas se necesitan mutuamente para lograr resultados que no alcanzarían solas."],
+["Parafrasear","Repetir con tus propias palabras lo que dijo el otro para confirmar que lo entendiste."],
+["Negociación ganar-ganar","Acuerdo en el que todas las partes obtienen un beneficio."]]},
+2:{t:"Habilidades de emprendimiento",sub:[
+["Sensibilidad para escuchar preocupaciones detrás de peticiones",["Identificar a los clientes","Identificar y articular preocupaciones"]],
+["Capacidad de generar coordinación",["Definición clara de compromisos","Capacidad de negociar acuerdos","Capacidad para generar acciones","Anticipar y declarar quiebres","Cerrar conversaciones","Pedir evaluación","Aprender de los quiebres"]],
+["Capacidad para generar redes de ayuda",[]],
+["Visión de negocio",["Capacidad de detectar áreas de negocio","Habilidad para leer estados financieros","Interés constante en la economía y el extranjero"]]],
+defs:[["Quiebre","Situación inesperada que interrumpe el curso normal de una acción o de un compromiso."],
+["Estados financieros","Informes que muestran la situación económica de una empresa: lo que tiene, lo que debe y lo que gana."]]},
+3:{t:"Pensamiento crítico",sub:[
+["Análisis de información",["Distinguir hechos de opiniones","Identificar los supuestos que hay detrás de una afirmación","Evaluar la calidad y confiabilidad de las fuentes"]],
+["Argumentación",["Formular argumentos claros y ordenados","Detectar falacias en el razonamiento propio y ajeno","Sostener una postura con evidencia"]],
+["Toma de decisiones",["Comparar alternativas","Considerar las consecuencias de cada opción","Decidir aun con información incompleta"]],
+["Autocrítica intelectual",["Reconocer los propios sesgos","Revisar las opiniones ante nueva evidencia"]]],
+defs:[["Falacia","Razonamiento que parece válido pero no lo es."],
+["Sesgo cognitivo","Tendencia automática del pensamiento que distorsiona la forma de interpretar la información."],
+["Evidencia","Dato o hecho comprobable que respalda una afirmación."]]},
+4:{t:"Liderazgo y trabajo en equipo",sub:[
+["Trabajo en equipo",["Compartir objetivos comunes","Repartir responsabilidades de forma clara","Cumplir los compromisos adquiridos","Reconocer las aportaciones de los demás"]],
+["Liderazgo",["Inspirar y motivar a otros","Delegar con claridad","Dar y recibir retroalimentación","Tomar decisiones en beneficio del equipo"]],
+["Gestión de conflictos",["Identificar el origen del conflicto","Mediar entre posturas distintas","Buscar acuerdos que beneficien a todos","Restaurar la confianza después de una diferencia"]]],
+defs:[["Delegar","Encargar a otra persona una tarea junto con la autoridad y los recursos para realizarla."],
+["Retroalimentación","Información que se da sobre el desempeño de alguien para ayudarle a mejorar."],
+["Mediación","Proceso en el que una persona neutral ayuda a las partes a llegar a un acuerdo."]]},
+5:{t:"Comunicación efectiva",p:["<strong>Empatía:</strong> sintonizarse con las preocupaciones del otro, enfocarse, calidez.","Empatía, escuchar, producir coordinaciones efectivas.","Diseñar conversaciones que se hacen cargo al escuchar al otro para generar interpretaciones comunes."],sub:[
+["Escuchar",["Callarse cuando el otro habla","Identificar qué está entendiendo el otro","Identificar desde dónde escucha el otro","Manejo de forma y fondo de la comunicación (oral: dicción, muletillas; escrita: sintaxis, uso de tecnologías)"]],
+["Escuchar estados de ánimo",["Sensibilidad en el manejo del lenguaje corporal (propio y del otro)"]]],
+defs:[["Empatía","Capacidad de comprender lo que otra persona siente y piensa, y de ponerse en su lugar."],
+["Muletilla","Palabra o frase que se repite sin necesidad al hablar, como «o sea» o «este»."],
+["Sintaxis","Forma en que se ordenan las palabras para construir oraciones."]]},
+6:{t:"Creatividad y solución de problemas",sub:[
+["Pensamiento creativo",["Generar muchas ideas antes de elegir una","Combinar ideas de campos distintos","Cuestionar lo establecido"]],
+["Solución de problemas",["Definir con claridad el problema","Buscar las causas de fondo","Plantear varias alternativas de solución","Probar y evaluar los resultados"]],
+["Innovación",["Construir prototipos sencillos","Aprender de los errores","Implementar mejoras de forma continua"]]],
+defs:[["Causa raíz","Origen principal de un problema, cuya solución evita que se repita."],
+["Prototipo","Versión inicial y sencilla de una idea que sirve para probarla."],
+["Lluvia de ideas","Técnica para generar muchas ideas en poco tiempo sin juzgarlas al inicio."]]},
+7:{t:"Lenguaje",p:["Cómo hablas, concibes, expresas, representas."],sub:[
+["Hablar",["Expresar las ideas con claridad","Adaptar el registro al interlocutor y al contexto","Usar un vocabulario preciso","Cuidar el volumen y el ritmo"]],
+["Leer y escribir",["Comprender lo que se lee","Redactar con coherencia","Cuidar la ortografía y la sintaxis","Estructurar el mensaje según su propósito"]],
+["Representar",["Usar imágenes, esquemas y símbolos","Traducir ideas en gráficos o mapas"]],
+["Pensar con el lenguaje",["Nombrar las emociones propias","Distinguir hechos de juicios","Interpretar lo que otros quieren decir"]]],
+defs:[["Lenguaje","Sistema de signos con el que una persona piensa, expresa y representa lo que vive."]]},
+8:{t:"Finanzas",p:["¿Y tu dinero para qué sirve? ¿Cómo lo cuido?"],sub:[
+["Conocer tu dinero",["Registrar ingresos y gastos","Distinguir necesidades de deseos","Elaborar un presupuesto"]],
+["Cuidar tu dinero",["Ahorrar de forma constante","Formar un fondo de emergencia","Evitar deudas innecesarias","Protegerte de fraudes"]],
+["Hacer crecer tu dinero",["Entender cómo funciona el interés","Invertir según tus objetivos y tu tolerancia al riesgo","Planear metas a corto y largo plazo"]],
+["Consumo responsable",["Comparar antes de comprar","Evitar las compras impulsivas","Usar el crédito con responsabilidad"]]],
+defs:[["Finanzas personales","Manera en que una persona obtiene, gasta, ahorra y protege su dinero."]]},
+9:{t:"Sanidad mental",sub:[],dom:[
+["Dominio de la regulación emocional",[
+["Autoconciencia emocional",["Reconocer las emociones propias","Identificar los desencadenantes de emociones","Aceptar los estados de ánimo"]],
+["Gestión del estrés",["Aplicar técnicas de relajación","Establecer límites saludables y saber cuándo decir “no”","Desconectarse del trabajo o pantallas de forma periódica"]]]],
+["Dominio del autocuidado cognitivo",[
+["Higiene mental",["Detectar y frenar el autosabotaje o pensamientos intrusivos","Practicar autocompasión","Cuestionar las creencias y aceptar el cambio"]]]]],
+defs:[["Regulación emocional","Capacidad de influir en cómo y cuándo se vive una emoción, y en cómo se expresa."],
+["Autosabotaje","Conducta o pensamiento que sin querer te aleja de tus propias metas."],
+["Autocompasión","Tratarte con la misma comprensión que ofrecerías a alguien más ante un error o dolor."]]},
+10:{t:"Resiliencia",sub:[],dom:[
+["Dominio de la adaptación a la adversidad",[
+["Flexibilidad mental",["Reestructurar las situaciones difíciles","Ajustar las expectativas ante cambios repentinos","Encontrar alternativas cuando el plan inicial falla"]],
+["Tolerancia a la frustración",["Soportar la incomodidad temporal sin abandonar","Regular la impulsividad ante situaciones de crisis","Mantener la perspectiva a largo plazo durante los bloqueos"]]]],
+["Dominio de la recuperación activa",[
+["Búsqueda de apoyos",["Pedir ayuda de manera asertiva cuando es necesario","Compartir cargas emocionales con redes de apoyo"]],
+["Enfoque de soluciones",["Distinguir lo que puedes controlar y lo que no","Dividir los problemas grandes en pequeños pasos manejables"]]]]],
+defs:[["Resiliencia","Capacidad de adaptarse y recuperarse después de una situación difícil."],
+["Asertividad","Expresar lo que necesitas o piensas de forma clara y respetuosa."],
+["Reestructurar","Cambiar la manera de interpretar una situación para verla desde un ángulo más útil."]]},
+11:{t:"Capacidad de aprendizaje",sub:[],dom:[
+["Dominio de la adquisición de conocimientos",[
+["Curiosidad activa",["Hacer preguntas profundas y de calidad","Investigar temas fuera de la zona de confort","Investigar el “por qué” y no solo el “cómo”"]],
+["Comprensión y síntesis",["Conectar los nuevos conocimientos con el conocimiento previo","Saber explicar conceptos complejos en palabras simples","Organizar información de manera visual o estructurada"]]]],
+["Dominio de la integración y mejora continua",[
+["Metacognición",["Evaluar el proceso propio de pensamiento y estudio","Identificar lagunas o errores de comprensión"]],
+["Aplicación práctica",["Traducir la teoría en ejercicios o proyectos reales","Experimentar y cometer errores de forma controlada, así como aprender de ellos"]]]]],
+defs:[["Metacognición","Pensar sobre tu propia forma de pensar y aprender para mejorarla."],
+["Síntesis","Resumir lo esencial de una información uniendo sus ideas principales."],
+["Laguna","Vacío en lo que sabes o entiendes sobre un tema."]]}
+};
+
+var vista=document.getElementById("vista"),tabs=document.getElementById("tabs");
+function el(h){return h}
+function inicio(){
+  vista.innerHTML='<div class="vista"><h1>Los cuatro pilares de la educación</h1><p class="lead">Elige un número en la parte superior para explorar cada habilidad.</p><div class="pilares">'+
+  pilares.map(function(p){return '<article class="pilar"><h2>'+p[0]+'</h2><p>'+p[1]+'</p></article>'}).join("")+'</div></div>';
+  marca(null);
+}
+function pagina(n){
+  var d=paginas[n],h='<div class="vista">';
+  if(!d){h+='<h1>Página '+n+'</h1><div class="vacio-msg"><p>Esta página aún no tiene contenido.</p></div></div>';}
+  else{
+    h+='<div class="pagina"><div class="texto"><h1>'+d.t+'</h1>';
+    (d.p||[]).forEach(function(x){h+='<p>'+x+'</p>'});
+    if(d.sub.length)h+='<h2 class="sub" style="margin-top:8px">Sub-habilidades</h2>';
+    d.sub.forEach(function(s){h+='<h3 class="sub">'+s[0]+'</h3>'+(s[1].length?'<ul>'+s[1].map(function(i){return '<li>'+i+'</li>'}).join("")+'</ul>':'')});
+    (d.dom||[]).forEach(function(o){h+='<h2 class="dom">'+o[0]+'</h2>';o[1].forEach(function(s){h+='<h3 class="sub">'+s[0]+'</h3><ul>'+s[1].map(function(i){return '<li>'+i+'</li>'}).join("")+'</ul>'})});h+='</div><dl>'+d.defs.map(function(x){return '<div class="def"><dt>'+x[0]+'</dt><dd>'+x[1]+'</dd></div>'}).join("")+'</dl></div></div>';
+  }
+  vista.innerHTML=h;marca(n);
+}
+function marca(n){Array.prototype.forEach.call(tabs.children,function(b){b.setAttribute("aria-selected",String(+b.textContent===n))})}
+for(var i=1;i<=11;i++){(function(n){var b=document.createElement("button");b.type="button";b.setAttribute("role","tab");b.textContent=n;b.setAttribute("aria-label","Página "+n);
+  if(!paginas[n])b.className="vacio";
+  b.onclick=function(){pagina(n);window.scrollTo({top:0,behavior:"smooth"});b.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"})};tabs.appendChild(b)})(i)}
+document.getElementById("inicio").onclick=function(){inicio();window.scrollTo({top:0,behavior:"smooth"})};
+inicio();
+</script>
+</body>
+</html>

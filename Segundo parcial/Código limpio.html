@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Código limpio: Batalla contra el código sucio</title>
+<style>
+/* ===== CONFIGURACIÓN: cambia estas rutas por tus PNG (o haz clic en la imagen para cargar una) ===== */
+:root{
+  --bg:#0a1626;--panel:#122238;--panel2:#1a3050;--line:#2a4a6e;--text:#e4f1fa;--muted:#8fb0c9;
+  --ice:#9fe0f5;--cyan:#3cc4dc;--indigo:#7a8cff;--ok:#4fd6b0;--warn:#f2b45a;--bad:#ff6b81;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#16345a 0%,var(--bg) 60%);color:var(--text);
+  font:16px/1.55 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif;min-height:100vh}
+header{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--line);background:#0a1626cc}
+header h1{font-size:1.15rem;margin:0;letter-spacing:.2px}
+header small{color:var(--muted);display:block;font-weight:400}
+nav{display:flex;gap:6px;padding:10px 18px 0;border-bottom:1px solid var(--line);overflow-x:auto}
+nav button{background:none;border:0;color:var(--muted);padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;
+  border-bottom:3px solid transparent;white-space:nowrap}
+nav button[aria-selected=true]{color:var(--ice);border-color:var(--cyan)}
+button:focus-visible,.logo:focus-visible,.monster:focus-visible{outline:3px solid var(--indigo);outline-offset:2px}
+main{max-width:760px;margin:0 auto;padding:18px}
+section[hidden]{display:none}
+.bar{height:18px;background:#07101c;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:100%;transition:width .45s ease}
+.bar.m i{background:linear-gradient(90deg,#7a8cff,#b4a0ff)}
+.bar.p i{background:linear-gradient(90deg,#3cc4dc,#4fd6b0)}
+.bar.p.low i{background:linear-gradient(90deg,#f2b45a,#ff6b81)}
+.lbl{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);margin:0 0 5px}
+.arena{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;position:relative}
+.monster{display:block;margin:10px auto 14px;width:min(240px,60%);aspect-ratio:1;object-fit:contain;cursor:pointer}
+.monster.hit{animation:hit .35s}
+@keyframes hit{25%{transform:translateX(-8px) rotate(-2deg)}75%{transform:translateX(8px) rotate(2deg)}}
+.q{margin:18px 0 10px;font-size:1.08rem;font-weight:600}
+.opts{display:grid;gap:9px}
+.opts button{text-align:left;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;font:inherit;cursor:pointer}
+.opts button:hover:not(:disabled){border-color:var(--cyan)}
+.opts button:disabled{cursor:default}
+.opts .good{border-color:var(--ok);background:#12362f}
+.opts .meh{border-color:var(--warn);background:#3a2f17}
+.opts .awful{border-color:var(--bad);background:#40172a}
+.fb{min-height:3.2em;margin:12px 0;font-size:.93rem;color:var(--ice)}
+.me{margin-top:6px}
+.cta{background:var(--cyan);color:#05212b;border:0;border-radius:12px;padding:12px 20px;font:inherit;font-weight:700;cursor:pointer}
+.next{margin-right:8px;background:var(--panel2);color:var(--text);border:1px solid var(--cyan)}
+.end{position:absolute;inset:0;background:#0a1626f2;border-radius:18px;display:grid;place-content:center;text-align:center;padding:20px;gap:10px}
+.end[hidden]{display:none}
+.end h2{margin:0;font-size:1.8rem}
+.end p{margin:0 0 6px;color:var(--muted)}
+.win h2{color:var(--ok)}.lose h2{color:var(--bad)}
+.legend{font-size:.8rem;color:var(--muted);margin-top:10px}
+h2.t{font-size:1.4rem;margin:6px 0 4px}
+.lead{color:var(--muted);margin:0 0 16px}
+.grid{display:grid;gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--cyan);border-radius:12px;padding:12px 16px}
+.card:nth-child(even){border-left-color:var(--indigo)}
+.card h3{margin:0 0 4px;font-size:1.02rem;color:var(--ice)}
+.card p{margin:0;color:var(--text);font-size:.95rem}
+.opinion{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.opinion p{margin:0 0 14px;max-width:70ch}
+.opinion strong{color:var(--ice)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Código limpio<small>Batalla contra el código sucio</small></h1>
+</header>
+<nav role="tablist" aria-label="Secciones">
+  <button role="tab" aria-selected="true" data-t="juego">Juego</button>
+  <button role="tab" aria-selected="false" data-t="libro">El libro</button>
+  <button role="tab" aria-selected="false" data-t="video">Opinión del video</button>
+</nav>
+<input type="file" id="fMon" accept="image/png,image/*" hidden>
+
+<main>
+<section id="juego">
+  <div class="arena">
+    <div class="lbl"><span>Monstruo</span><span id="mTxt">100%</span></div>
+    <div class="bar m" role="progressbar" aria-label="Vida del monstruo"><i id="mBar"></i></div>
+    <img class="monster" id="monster" tabindex="0" alt="Monstruo del mal código (clic para cambiar la imagen PNG)" title="Clic para cambiar la imagen del monstruo">
+    <p class="q" id="q" aria-live="polite"></p>
+    <div class="opts" id="opts"></div>
+    <div class="fb" id="fb" aria-live="polite"></div>
+    <div><button class="cta next" id="next" hidden>Siguiente pregunta</button></div>
+    <div class="me">
+      <div class="lbl"><span>Tu vida</span><span id="pTxt">100%</span></div>
+      <div class="bar p" id="pWrap" role="progressbar" aria-label="Tu vida"><i id="pBar"></i></div>
+    </div>
+    <div class="legend">Correcta: -20% al monstruo. Incorrecta: -20% a tu vida. Pésima práctica: -40% a tu vida.</div>
+
+    <div class="end win" id="win" hidden><h2>¡Victoria!</h2><p>El código quedó limpio y el monstruo se desvaneció.</p><div><button class="cta" data-again>Volver a jugar</button></div></div>
+    <div class="end lose" id="lose" hidden><h2>Derrota</h2><p>El código sucio te venció. Repasa el libro e inténtalo otra vez.</p><div><button class="cta" data-again>Volver a jugar</button></div></div>
+  </div>
+</section>
+
+<section id="libro" hidden>
+  <h2 class="t">Lo esencial de «Código limpio»</h2>
+  <p class="lead">Robert C. Martin: escribir código que otros puedan leer, entender y cambiar sin miedo.</p>
+  <div class="grid">
+    <div class="card"><h3>Nombres con significado</h3><p>Los nombres deben revelar intención, evitar desinformación y ser fáciles de buscar y pronunciar.</p></div>
+    <div class="card"><h3>Funciones pequeñas</h3><p>Una función hace una sola cosa, en un solo nivel de abstracción, con pocos argumentos y sin efectos secundarios ocultos.</p></div>
+    <div class="card"><h3>Comentarios</h3><p>Un comentario suele ser señal de que el código no se explica solo. Es mejor refactorizar que justificar.</p></div>
+    <div class="card"><h3>Formato</h3><p>El código se lee de arriba abajo como un periódico. La consistencia y el equipo importan más que el gusto personal.</p></div>
+    <div class="card"><h3>Objetos y estructuras de datos</h3><p>Los objetos ocultan datos y exponen comportamiento. La Ley de Deméter evita cadenas de llamadas que expongan detalles internos.</p></div>
+    <div class="card"><h3>Manejo de errores</h3><p>Usa excepciones en lugar de códigos de retorno, no devuelvas ni pases null y separa la lógica de negocio del manejo de fallos.</p></div>
+    <div class="card"><h3>Pruebas unitarias</h3><p>Las leyes del TDD y la regla F.I.R.S.T.: rápidas, independientes, repetibles, auto-validadas y oportunas.</p></div>
+    <div class="card"><h3>Clases y sistemas</h3><p>Las clases deben ser pequeñas y con una sola responsabilidad (SRP). Separa la construcción del sistema de su uso.</p></div>
+    <div class="card"><h3>Diseño emergente</h3><p>Un diseño es simple si pasa las pruebas, no tiene duplicación, expresa la intención y minimiza clases y métodos.</p></div>
+    <div class="card"><h3>Olores del código</h3><p>Duplicación, código muerto, números mágicos y funciones largas son síntomas de que hace falta refactorizar.</p></div>
+    <div class="card"><h3>La regla del Boy Scout</h3><p>Deja el campamento más limpio de como lo encontraste: mejora un poco el código cada vez que lo toques.</p></div>
+  </div>
+</section>
+
+<section id="video" hidden>
+  <h2 class="t">Mi opinión sobre el video</h2>
+  <p class="lead">Video: «Lecciones de Negocios, Dinero y Éxito | Dimes y Billetes»</p>
+  <div class="opinion" id="opinion"></div>
+</section>
+</main>
+
+<script>
+/* ===== CONFIGURACIÓN EDITABLE ===== */
+const MONSTER_SRC = "";   // Ej.: "monstruo.png". Vacío = monstruo de ejemplo.
+const OPINION_VIDEO = [
+ ["Tener información es tener poder",`El factor principal para ganar en cualquier trato es estar bien preparado y saber más que la otra persona. Esto incluye conocer qué alternativas tiene la contraparte si no cierra el trato contigo (la oferta y la demanda real).`],
+ ["La amabilidad abre puertas",`Tratar bien a la gente y ganársela de forma genuina es una herramienta básica pero poderosa que muchos pasan por alto.`],
+ ["No todos tienen que emprender por obligación",`Tener un trabajo o empleo fijo es completamente digno y necesario. El emprendimiento implica aguantar caídas duras, soledad y mucho sacrificio personal; si no se tiene ese estómago ni esa pasión, es mejor quedarse en el empleo actual.`],
+ ["El mayor error es la falta de preparación básica",`Muchos proyectos fracasan porque los fundadores no saben hacer ni leer un estado de resultados o un balance. Arturo lo compara con un médico: si un cardiólogo no sabe leer un electrocardiograma, se le muere el paciente; si no sabes leer tus números, se te muere el negocio.`],
+ ["Cero dinero rápido",`Un negocio requiere paciencia; normalmente no genera ganancias ni recupera la inversión antes de un par de años.`],
+ ["El dinero fácil no existe",`Todas las promesas de ganancias exageradas y rápidas son fraudes. La regla de oro es sencilla: a mayor rendimiento prometido, mayor es el riesgo.`],
+ ["Poner las finanzas en blanco y negro",`Tanto para un negocio como a nivel personal, no sirve llevar las cuentas de memoria. Hay que anotar en un papel o computadora los ingresos fijos contra los gastos fijos para detectar en qué se está gastando de más y procurar ahorrar entre un 10% y 15%.`],
+ ["Invertir seguro",`Para quien tiene el dinero guardado "bajo el colchón", la opción base y más segura en México son los Cetes. De esa tasa hacia arriba, cualquier opción conlleva riesgo real.`],
+ ["Cumplir siempre tu palabra",`Una regla esencial en los negocios es no fallar a los acuerdos. Si cumples, los proveedores y socios te respaldan y te abren puertas incluso cuando no tienes capital.`],
+ ["El éxito verdadero es la familia",`Arturo recalca que su mayor logro no son las empresas ni el dinero, sino su familia y los valores inculcados (respeto, sencillez, trabajo y cariño).`],
+ ["El dinero no da la felicidad",`El dinero ayuda y quita preocupaciones materiales, pero no compra lo esencial y conlleva grandes responsabilidades y agobios.`],
+ ["Aprender a usar la Inteligencia Artificial",`Es la tercera gran revolución moderna (junto al internet y los celulares). No todos necesitan programarla, pero cualquier persona o changarro debe aprender a usarla y, sobre todo, saber hacerle las preguntas correctas.`],
+ ["Convertir problemas en oportunidades",`Una de las mayores lecciones que ha aprendido de trabajar con Carlos Slim es la capacidad de ver oportunidades gigantescas justo donde otros solo ven broncas.`],
+ ["El proyecto social de los Bancos de Alimentos",`Arturo destaca como su mayor motivación actual el crecimiento de bodegas y transporte para rescatar comida antes de que caduque y repartirla a millones de personas con hambre en México.`]
+];
+const DMG = {monster:20, wrong:20, awful:40};
+
+/* Cada pregunta: ok = correcta, w = dos incorrectas, x = respuesta pésima */
+const QS = [
+ {q:"¿Cuál es el mejor nombre para una variable que guarda los días desde la última modificación?",ok:"diasDesdeModificacion",w:["d","datosFecha"],x:"temp2",e:"Los nombres deben revelar su intención sin necesidad de comentarios."},
+ {q:"¿Cuál es la regla principal sobre el tamaño de las funciones?",ok:"Deben ser pequeñas y hacer una sola cosa",w:["Deben agrupar toda la lógica de un módulo","Deben tener al menos 5 argumentos para ser flexibles"],x:"Cuanto más larga, mejor: así se evitan saltos de lectura",e:"Las funciones pequeñas con una sola responsabilidad son más fáciles de leer, probar y reutilizar."},
+ {q:"Tu código necesita un comentario largo para explicar qué hace. ¿Qué haces primero?",ok:"Refactorizar para que el código se explique solo",w:["Añadir más comentarios","Moverlo a otro archivo"],x:"Dejarlo así: si funciona, no se toca",e:"Un comentario suele compensar código poco expresivo. Antes que comentar, refactoriza."},
+ {q:"¿Qué es preferible para manejar errores?",ok:"Lanzar excepciones",w:["Devolver códigos de error numéricos","Imprimir el error en consola y continuar"],x:"Ignorar el error con un catch vacío",e:"Las excepciones separan el flujo normal del manejo de errores y no se pueden ignorar por descuido."},
+ {q:"¿Qué dice el principio de responsabilidad única (SRP)?",ok:"Una clase debe tener una sola razón para cambiar",w:["Una clase debe tener un solo método","Un programa debe tener una sola clase"],x:"Una clase debe encargarse de todo para no depender de otras",e:"Cada clase debe responder a un único actor o motivo de cambio."},
+ {q:"¿Qué haces con los números mágicos como 86400?",ok:"Los reemplazas por constantes con nombre, como SEGUNDOS_POR_DIA",w:["Los explicas con un comentario al final de la línea","Los escribes en un archivo de texto aparte"],x:"Los repites en todos lados: así se ven más claros",e:"Las constantes con nombre expresan intención y se cambian en un solo lugar."},
+ {q:"¿Qué significa la F de F.I.R.S.T. en las pruebas unitarias?",ok:"Fast (rápidas)",w:["Flexible","Final"],x:"Fake: pruebas que siempre pasan",e:"Las pruebas lentas se dejan de ejecutar, y entonces dejan de proteger el código."},
+ {q:"Encuentras un método con código duplicado en tres lugares. ¿Qué haces?",ok:"Extraer el código común a una función única",w:["Copiar los cambios en los tres lugares","Comentar dos de las copias por si acaso"],x:"Duplicarlo una vez más en el cuarto lugar",e:"La duplicación es la raíz de muchos males del software: elimínala."},
+ {q:"¿Qué propone la regla del Boy Scout?",ok:"Dejar el código un poco más limpio de como lo encontraste",w:["Reescribir todo el sistema desde cero","Documentar cada línea antes de hacer commit"],x:"Dejar el código sucio para el siguiente",e:"Pequeñas mejoras constantes evitan que el código se pudra con el tiempo."},
+ {q:"¿Qué es lo mejor que puede hacer una función con null?",ok:"No devolverlo ni recibirlo: usar casos especiales o excepciones",w:["Devolverlo siempre que algo falle","Validarlo con un if en cada llamada"],x:"Asumir que nunca llegará null",e:"Devolver null obliga a comprobarlo en todas partes y es una fuente clásica de errores."},
+ {q:"¿Qué ayuda más a que las pruebas protejan tu código?",ok:"Mantenerlas limpias y legibles, como el código de producción",w:["Escribirlas solo cuando hay tiempo al final","Hacerlas lo bastante largas para probar muchas cosas a la vez"],x:"Borrar las que fallan",e:"Las pruebas sucias se vuelven un lastre; un conjunto de pruebas limpio permite cambiar el código sin miedo."}
+];
+
+const $ = id => document.getElementById(id);
+const MON_DEFAULT = "data:image/svg+xml;utf8," + encodeURIComponent(
+ `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><path d='M40 150c-20-60 10-120 60-120s80 60 60 120c-10 20-30 10-40 20-10-12-30-12-40 0-10-10-30 0-40-20z' fill='#4d5fd6'/><circle cx='75' cy='85' r='16' fill='#e4f1fa'/><circle cx='125' cy='85' r='16' fill='#e4f1fa'/><circle cx='78' cy='88' r='7' fill='#0a1626'/><circle cx='122' cy='88' r='7' fill='#0a1626'/><path d='M65 125l15 10 10-10 10 10 10-10 10 10 15-10' stroke='#e4f1fa' stroke-width='6' fill='none' stroke-linejoin='round'/><text x='100' y='62' font-family='monospace' font-size='20' fill='#9fe0f5' text-anchor='middle'>{ null }</text></svg>`);
+
+/* Pestañas */
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  ["juego","libro","video"].forEach(s=>$(s).hidden = s!==b.dataset.t);
+});
+
+/* Monstruo (PNG intercambiable) */
+function pick(fileInput, cb){ fileInput.onchange=()=>{ const f=fileInput.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>cb(r.result); r.readAsDataURL(f); fileInput.value=""; }; fileInput.click(); }
+$("monster").src = MONSTER_SRC || MON_DEFAULT;
+$("monster").onclick=()=>pick($("fMon"),s=>$("monster").src=s);
+$("monster").onkeydown=e=>{ if(e.key==="Enter"){ $("monster").click(); } };
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+$("opinion").innerHTML = OPINION_VIDEO.map(([t,d])=>"<p><strong>"+esc(t)+":</strong> "+esc(d)+"</p>").join("");
+
+/* Juego */
+let mHp, pHp, order, idx, locked;
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+function bars(){
+  $("mBar").style.width=mHp+"%"; $("mTxt").textContent=mHp+"%";
+  $("pBar").style.width=pHp+"%"; $("pTxt").textContent=pHp+"%";
+  $("pWrap").classList.toggle("low",pHp<=40);
+  $("pWrap").setAttribute("aria-valuenow",pHp); document.querySelector(".bar.m").setAttribute("aria-valuenow",mHp);
+}
+function start(){
+  mHp=100; pHp=100; order=shuffle(QS); idx=0;
+  $("win").hidden=true; $("lose").hidden=true; bars(); ask();
+}
+function ask(){
+  locked=false; $("fb").textContent=""; $("next").hidden=true;
+  if(idx>=order.length){ order=shuffle(QS); idx=0; }
+  const Q=order[idx];
+  $("q").textContent=Q.q;
+  const opts=shuffle([{t:Q.ok,k:"good"},{t:Q.w[0],k:"meh"},{t:Q.w[1],k:"meh"},{t:Q.x,k:"awful"}]);
+  $("opts").innerHTML="";
+  opts.forEach(o=>{ const b=document.createElement("button"); b.textContent=o.t; b.dataset.k=o.k; b.onclick=()=>answer(b,Q); $("opts").appendChild(b); });
+}
+function answer(btn,Q){
+  if(locked) return; locked=true;
+  const k=btn.dataset.k;
+  document.querySelectorAll("#opts button").forEach(b=>{ b.disabled=true; if(b.dataset.k==="good") b.classList.add("good"); });
+  if(k==="good"){ mHp=Math.max(0,mHp-DMG.monster); $("fb").textContent="¡Correcto! El monstruo pierde "+DMG.monster+"%. "+Q.e; $("monster").classList.remove("hit"); void $("monster").offsetWidth; $("monster").classList.add("hit"); }
+  else if(k==="meh"){ pHp=Math.max(0,pHp-DMG.wrong); btn.classList.add("meh"); $("fb").textContent="Incorrecta. Pierdes "+DMG.wrong+"%. "+Q.e; }
+  else { pHp=Math.max(0,pHp-DMG.awful); btn.classList.add("awful"); $("fb").textContent="¡Pésima práctica! Pierdes "+DMG.awful+"%. "+Q.e; }
+  bars();
+  if(mHp<=0){ setTimeout(()=>{ $("win").hidden=false; $("win").querySelector("button").focus(); },900); return; }
+  if(pHp<=0){ setTimeout(()=>{ $("lose").hidden=false; $("lose").querySelector("button").focus(); },900); return; }
+  idx++; $("next").hidden=false; $("next").focus();
+}
+$("next").onclick=ask;
+document.querySelectorAll("[data-again]").forEach(b=>b.onclick=start);
+start();
+</script>
+</body>
+</html>

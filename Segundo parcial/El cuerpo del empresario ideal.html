@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>El cuerpo del empresario ideal</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#080e1c; --panel:#0f1830; --line:#21315a; --body:#17254a; --body-hover:#2a4a8a;
+  --ice:#a8dcff; --teal:#3fd0c9; --indigo:#7b88ff; --text:#d9e4f7; --muted:#8fa3c4;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:radial-gradient(1200px 600px at 20% -10%,#14234a 0%,var(--bg) 60%) fixed;color:var(--text);font-family:'Newsreader',Georgia,serif;font-size:1.1rem;line-height:1.65}
+h1,h2,h3,.ui{font-family:'Sora','Segoe UI',system-ui,sans-serif}
+main{max-width:1040px;margin:0 auto;padding:2rem 1.25rem 4rem}
+header h1{font-size:clamp(1.8rem,4.5vw,2.8rem);line-height:1.15;margin:0 0 .5rem;color:var(--ice);font-weight:700}
+header p{margin:0;color:var(--muted);max-width:60ch}
+.stage{display:grid;grid-template-columns:minmax(260px,380px) 1fr;gap:2rem;align-items:start;margin-top:2rem}
+.figure{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:1rem;display:flex;justify-content:center}
+svg{width:100%;max-width:300px;height:auto;display:block}
+.part{fill:var(--body);stroke:var(--line);stroke-width:1.5;cursor:pointer;transition:fill .2s,filter .2s;outline:none}
+.part:hover,.part:focus-visible{fill:var(--body-hover)}
+.part.seen{stroke:var(--indigo)}
+.part.active{fill:var(--teal);stroke:var(--ice);filter:drop-shadow(0 0 8px rgba(63,208,201,.6))}
+.part:focus-visible{stroke:var(--ice);stroke-width:3}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:1.75rem;position:sticky;top:1rem;min-height:260px}
+.panel .where{font-family:'Sora',sans-serif;font-size:.9rem;color:var(--muted);margin:0 0 .5rem}
+.panel h2{margin:0 0 .75rem;font-size:1.9rem;color:var(--teal);line-height:1.2}
+.panel p.msg{margin:0;font-size:1.2rem}
+.panel.pop{animation:pop .35s ease}
+@keyframes pop{from{opacity:.2;transform:translateY(6px)}to{opacity:1;transform:none}}
+.progress{margin-top:1.5rem;font-family:'Sora',sans-serif;font-size:.85rem;color:var(--muted)}
+.bar{height:6px;background:var(--line);border-radius:6px;margin-top:.4rem;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--indigo),var(--teal));transition:width .3s}
+.video{margin-top:4rem;border-top:1px solid var(--line);padding-top:2.5rem}
+.video h2{font-size:1.7rem;color:var(--ice);margin:0 0 1.25rem}
+.frame{aspect-ratio:16/9;width:100%;background:var(--panel);border:2px dashed var(--line);border-radius:18px;display:grid;place-items:center;overflow:hidden;text-align:center;color:var(--muted)}
+.frame video,.frame iframe{width:100%;height:100%;border:0;background:#000}
+.frame label{cursor:pointer;font-family:'Sora',sans-serif;font-size:.95rem;display:inline-block;margin-top:.75rem;padding:.6rem 1.1rem;border-radius:999px;background:var(--body);color:var(--ice);border:1px solid var(--indigo)}
+.frame label:hover,.frame label:focus-within{background:var(--body-hover)}
+.frame input{position:absolute;opacity:0;width:1px;height:1px}
+.summary{margin-top:1.75rem;max-width:68ch}
+.summary h3{margin:0 0 .5rem;font-size:1.1rem;color:var(--teal)}
+.summary div[contenteditable]{outline:none;border-radius:8px;padding:.25rem .5rem;margin:0 -.5rem}
+.summary div[contenteditable]:focus{background:var(--panel);box-shadow:0 0 0 1px var(--line)}
+.hint{font-family:'Sora',sans-serif;font-size:.8rem;color:var(--muted);margin-top:.5rem}
+@media(max-width:760px){.stage{grid-template-columns:1fr}.panel{position:static;order:-1}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>El cuerpo del empresario ideal</h1>
+  <p>Cada parte del cuerpo tiene una cualidad. Toca la silueta para saber cuales son.</p>
+</header>
+
+<section class="stage">
+  <div class="figure">
+    <svg viewBox="0 0 240 560" role="group" aria-label="Silueta de cuerpo humano">
+      <ellipse class="part" data-k="cabeza" tabindex="0" role="button" aria-label="Cabeza" cx="120" cy="50" rx="30" ry="36"/>
+      <rect class="part" data-k="cuello" tabindex="0" role="button" aria-label="Cuello" x="108" y="82" width="24" height="22" rx="8"/>
+      <path class="part" data-k="pecho" tabindex="0" role="button" aria-label="Pecho" d="M80 106 Q120 98 160 106 L156 200 L84 200 Z"/>
+      <path class="part" data-k="abdomen" tabindex="0" role="button" aria-label="Abdomen" d="M85 202 L155 202 L151 270 L89 270 Z"/>
+      <path class="part" data-k="caderas" tabindex="0" role="button" aria-label="Caderas" d="M89 272 L151 272 Q164 295 160 312 L80 312 Q76 295 89 272 Z"/>
+      <rect class="part" data-k="brazoI" tabindex="0" role="button" aria-label="Brazo izquierdo" x="-11" y="0" width="22" height="105" rx="11" transform="translate(66,112) rotate(6)"/>
+      <rect class="part" data-k="brazoD" tabindex="0" role="button" aria-label="Brazo derecho" x="-11" y="0" width="22" height="105" rx="11" transform="translate(174,112) rotate(-6)"/>
+      <ellipse class="part" data-k="manoI" tabindex="0" role="button" aria-label="Mano izquierda" cx="53" cy="230" rx="11" ry="16"/>
+      <ellipse class="part" data-k="manoD" tabindex="0" role="button" aria-label="Mano derecha" cx="187" cy="230" rx="11" ry="16"/>
+      <rect class="part" data-k="muslos" tabindex="0" role="button" aria-label="Muslo izquierdo" x="-19" y="0" width="38" height="118" rx="18" transform="translate(101,308) rotate(2)"/>
+      <rect class="part" data-k="muslos" tabindex="0" role="button" aria-label="Muslo derecho" x="-19" y="0" width="38" height="118" rx="18" transform="translate(139,308) rotate(-2)"/>
+      <rect class="part" data-k="pantorrillas" tabindex="0" role="button" aria-label="Pantorrilla izquierda" x="-15" y="0" width="30" height="92" rx="14" transform="translate(104,430)"/>
+      <rect class="part" data-k="pantorrillas" tabindex="0" role="button" aria-label="Pantorrilla derecha" x="-15" y="0" width="30" height="92" rx="14" transform="translate(136,430)"/>
+      <ellipse class="part" data-k="pies" tabindex="0" role="button" aria-label="Pie izquierdo" cx="98" cy="538" rx="20" ry="9"/>
+      <ellipse class="part" data-k="pies" tabindex="0" role="button" aria-label="Pie derecho" cx="142" cy="538" rx="20" ry="9"/>
+    </svg>
+  </div>
+
+  <aside class="panel" id="panel" aria-live="polite">
+    <p class="where" id="where">Sin selección</p>
+    <h2 id="title">Empieza por donde quieras</h2>
+    <p class="msg" id="msg">Haz clic en la cabeza, el corazón, las manos o las piernas. Cada zona revela una cualidad que define a un buen empresario.</p>
+    <div class="progress"><span id="count">0 de 11 cualidades descubiertas</span><div class="bar"><i id="fill"></i></div></div>
+  </aside>
+</section>
+
+<section class="video">
+  <h2>Resumen del video</h2>
+
+  <div class="summary">
+    <h3>De qué trata</h3>
+    <div contenteditable="true" spellcheck="true" id="resumen">
+      <p>Escribe aquí el resumen del video. Puedes hacer clic sobre este texto y reemplazarlo con las ideas principales, los momentos clave y la conclusión que quieras destacar.</p>
+      <p>Una buena estructura: de qué habla el video, tres ideas centrales y qué puede hacer quien lo vea al terminar.</p>
+    </div>
+    <p class="hint">Conclusión<p class="hint">La charla con María Asunción Aramburuzabala nos enseña que el verdadero éxito empresarial a largo plazo no solo se mide en cifras financieras, sino en la capacidad de combinar una visión estratégica con valores inquebrantables, orden familiar y una relación sana con el fracaso. Su testimonio demuestra que proteger un legado requiere disciplina, humildad y, sobre todo, la valentía de poner reglas claras para trascender de generación en generación.</p>
+  </div>
+</section>
+</main>
+
+<script>
+// Para incrustar un video fijo, escribe aquí su dirección (archivo .mp4 o enlace embed) y se mostrará en lugar del espacio vacío.
+var VIDEO_SRC = "";
+
+var Q = {
+  cabeza:{n:"Cabeza",t:"Visión",m:"Ve oportunidades donde otros solo ven problemas y sabe imaginar el negocio de aquí a cinco años."},
+  cuello:{n:"Cuello",t:"Comunicación",m:"Sostiene la cabeza y conecta con el cuerpo: explica sus ideas con claridad a clientes, socios y equipo."},
+  pecho:{n:"Pecho",t:"Pasión",m:"Ama lo que construye. Esa energía contagia al equipo y lo sostiene cuando el camino se complica."},
+  abdomen:{n:"Abdomen",t:"Resiliencia",m:"Tiene temple para caer, aprender y volver a empezar. El fracaso es información, no una sentencia."},
+  caderas:{n:"Caderas",t:"Disciplina financiera",m:"Es la base del equilibrio: controla gastos, mide resultados y toma decisiones con números, no con corazonadas."},
+  brazoI:{n:"Brazo izquierdo",t:"Liderazgo",m:"Guía con el ejemplo, inspira confianza y sabe sacar lo mejor de cada persona."},
+  brazoD:{n:"Brazo derecho",t:"Capacidad de ejecución",m:"Convierte las ideas en acciones concretas, con fechas y responsables."},
+  manoI:{n:"Mano izquierda",t:"Generosidad",m:"Delega, reconoce el mérito ajeno y comparte el éxito con quienes lo hicieron posible."},
+  manoD:{n:"Mano derecha",t:"Negociación",m:"Busca acuerdos donde todos ganan y construye relaciones de largo plazo."},
+  muslos:{n:"Muslos",t:"Constancia",m:"Avanza todos los días, incluso cuando nadie aplaude. Los grandes resultados llegan con persistencia."},
+  pantorrillas:{n:"Pantorrillas",t:"Adaptabilidad",m:"Cambia de rumbo con rapidez cuando el mercado se mueve y aprende nuevas habilidades sin resistirse."},
+  pies:{n:"Pies",t:"Iniciativa",m:"Da el primer paso sin esperar condiciones perfectas. Empezar es la decisión más difícil."}
+};
+var TOTAL = Object.keys(Q).length, seen = {};
+var $ = function(id){return document.getElementById(id)};
+$("count").textContent = "0 de " + TOTAL + " cualidades descubiertas";
+
+function pick(k){
+  var q = Q[k]; if(!q) return;
+  document.querySelectorAll(".part").forEach(function(p){
+    p.classList.toggle("active", p.dataset.k === k);
+    if(p.dataset.k === k) p.classList.add("seen");
+  });
+  seen[k] = 1;
+  $("where").textContent = q.n;
+  $("title").textContent = q.t;
+  $("msg").textContent = q.m;
+  var n = Object.keys(seen).length;
+  $("count").textContent = n + " de " + TOTAL + " cualidades descubiertas";
+  $("fill").style.width = (n / TOTAL * 100) + "%";
+  var p = $("panel"); p.classList.remove("pop"); void p.offsetWidth; p.classList.add("pop");
+  if(window.matchMedia("(max-width:760px)").matches) p.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+document.querySelectorAll(".part").forEach(function(p){
+  p.addEventListener("click", function(){pick(p.dataset.k)});
+  p.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){e.preventDefault();pick(p.dataset.k)} });
+});
+
+function showVideo(src, isEmbed){
+  var f = $("frame");
+  f.style.border = "0";
+  f.innerHTML = isEmbed
+    ? '<iframe src="'+src+'" allowfullscreen title="Video"></iframe>'
+    : '<video src="'+src+'" controls playsinline></video>';
+}
+if(VIDEO_SRC) showVideo(VIDEO_SRC, !/\.(mp4|webm|ogg)(\?|$)/i.test(VIDEO_SRC));
+$("file").addEventListener("change", function(e){
+  var f = e.target.files[0]; if(f) showVideo(URL.createObjectURL(f), false);
+});
+</script>
+</body>
+</html>

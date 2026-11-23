@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cara a Cara · Simulador de negociación</title>
+<style>
+:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#141519;--bg2:#1d1f25;--bg3:#23252b;--tx:#fff;--mu:#a0a0a0;--or:#f47521;--ok:#2ab8a5;--ko:#e5484d}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Lato","Segoe UI",Roboto,Arial,sans-serif;line-height:1.5}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:22px;padding:0 4%;height:56px;background:#000;border-bottom:1px solid #2a2a2a}
+.logo{font-weight:900;font-size:20px;color:var(--or);cursor:pointer;white-space:nowrap}
+nav a{color:var(--mu);font-size:14px;cursor:pointer;font-weight:700}nav a:hover{color:var(--tx)}
+.pts{margin-left:auto;font-size:13px;color:var(--mu);white-space:nowrap}.pts b{color:var(--or)}
+.hero{position:relative;min-height:380px;display:flex;align-items:flex-end;padding:40px 4%;background:linear-gradient(90deg,var(--bg) 8%,transparent 70%),linear-gradient(0deg,var(--bg),transparent 40%),var(--g)}
+.hero .big{position:absolute;right:8%;top:50%;transform:translateY(-50%);font-size:200px;opacity:.9;filter:drop-shadow(0 10px 30px #0008)}
+.hero-in{position:relative;max-width:520px}
+h1{font-size:34px;margin:6px 0;line-height:1.15}h2{font-size:20px;margin:0 0 12px}
+.tag{display:inline-block;font-size:11px;font-weight:900;padding:2px 8px;border:1px solid var(--mu);color:var(--mu);margin-right:6px;letter-spacing:.5px}
+.tag.s{border-color:var(--ko);color:var(--ko)}.tag.c{border-color:var(--ok);color:var(--ok)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--or);color:#000;font-weight:900;border:0;padding:12px 22px;font-size:14px;cursor:pointer;letter-spacing:.5px;text-transform:uppercase}
+.btn:hover{background:#ff8c42}.btn.o{background:transparent;border:2px solid var(--or);color:var(--or);margin-left:10px}
+main{padding:24px 4% 60px}.row{margin-bottom:34px}
+.rail{display:flex;gap:16px;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin}
+.card{flex:0 0 168px;cursor:pointer}.card:hover .poster{transform:translateY(-4px);outline:2px solid var(--or)}
+.poster{height:236px;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:76px;position:relative;transition:.15s}
+.poster .tag{position:absolute;left:6px;top:8px;background:#000b;margin:0}
+.poster .done{position:absolute;right:6px;bottom:6px;background:var(--or);color:#000;font-size:11px;font-weight:900;padding:1px 7px}
+.card h3{font-size:14px;margin:8px 0 2px}.card p{margin:0;font-size:12px;color:var(--mu)}
+.wrap{max-width:820px;margin:0 auto}
+.panel{background:var(--bg2);padding:24px;margin-bottom:16px;border-left:4px solid var(--or)}
+.bar{height:5px;background:#333;margin:10px 0 20px}.bar i{display:block;height:100%;background:var(--or);transition:.3s}
+.phase{color:var(--or);font-weight:900;font-size:12px;letter-spacing:1px;text-transform:uppercase}
+.opt{display:block;width:100%;text-align:left;background:var(--bg3);color:var(--tx);border:2px solid transparent;padding:14px 16px;margin-bottom:10px;font:inherit;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--or)}.opt:disabled{cursor:default}
+.opt.g{border-color:var(--ok)}.opt.b{border-color:var(--ko)}.opt.m{border-color:#d9a441}
+.fb{padding:14px 16px;background:#0006;border-left:4px solid var(--mu);margin:14px 0;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.chips span{font-size:12px;background:var(--bg3);padding:3px 10px;color:var(--mu)}
+.chips span.on{background:var(--or);color:#000;font-weight:900}
+.score{font-size:64px;font-weight:900;color:var(--or);line-height:1}
+.back{color:var(--mu);cursor:pointer;font-size:13px;display:inline-block;margin-bottom:14px}.back:hover{color:var(--tx)}
+nav input{background:#23252b;border:1px solid #333;color:#fff;padding:6px 12px;width:150px;font:inherit;font-size:13px}
+.poster::after{content:"▶";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;background:#000a;opacity:0;transition:.15s}
+.card:hover .poster::after,.tp:hover .poster::after,.th:hover .poster::after{opacity:1}
+.tp{flex:0 0 210px;display:flex;align-items:flex-end;cursor:pointer}.tp i{font:900 120px/.9 Arial;color:var(--bg);-webkit-text-stroke:3px #777;margin-right:-22px;z-index:1}.tp .poster{width:132px;height:190px;flex:none;font-size:56px;position:relative}
+.th{flex:0 0 250px;cursor:pointer}.th .poster{height:140px;font-size:56px}.th .bar{margin:0;height:3px}
+.dots{position:absolute;right:4%;bottom:18px;display:flex;gap:6px}.dots i{width:22px;height:4px;background:#666;cursor:pointer}.dots i.on{background:var(--or)}
+.chipbar{display:flex;gap:8px;padding:14px 4% 0;overflow-x:auto}.chipbar a{border:1px solid #444;border-radius:20px;padding:5px 16px;font-size:13px;font-weight:700;color:var(--mu);cursor:pointer;white-space:nowrap}.chipbar a:hover{border-color:var(--or);color:var(--or)}
+.foot{border-top:1px solid #2a2a2a;padding:24px 4%;color:var(--mu);font-size:12px;text-align:center}
+.a-btn{text-decoration:none}
+@media(max-width:700px){nav input{width:90px}.hero .big{font-size:110px;right:4%;top:30%}h1{font-size:26px}nav a.h{display:none}.card{flex-basis:140px}.poster{height:196px}}
+</style></head><body>
+<nav><span class="logo" onclick="home()">CARA A CARA</span><a class="h" onclick="home()">Explorar</a><a class="h" onclick="go('c')">Cotidianas</a><a class="h" onclick="go('s')">Serias</a><a class="h" onclick="go('k0')">Anime</a><input placeholder="Buscar" oninput="srch(this.value)"><span class="pts">Puntos: <b id="tp">0</b></span></nav>
+<div id="app"></div>
+<script>
+const F=["Preparación","Discusión","Señales","Propuesta","Intercambio","Cierre","Acuerdo"];
+// [fase, situación, [[opción, puntos, retroalimentación]]]
+const S=[
+{id:"roomie",k:"c",e:"🍽️",n:"Platos y turnos",g:"linear-gradient(135deg,#ff7a45,#c2185b)",d:"Tu roomie acumula platos sucios y tú ya no aguantas. Se vale arreglarlo sin romper la convivencia.",st:[
+["Preparación","Entras a la cocina: otra vez hay platos de tres días. Tu roomie llegará en 10 minutos. ¿Cómo te preparas?",[["Reclamo en cuanto cruce la puerta.",0,"Negociar sin preparar es improvisar: pones a la otra parte a la defensiva."],["Anoto qué necesito (cocina limpia) y qué podría necesitar él/ella (horarios, tiempo).",2,"Identificar motivaciones propias y ajenas es la base del ganar-ganar."],["Lavo todo otra vez y me aguanto.",0,"Ceder sin hablar no resuelve; el conflicto vuelve."]]],
+["Discusión","Platicas. Tu roomie dice: “Es que llego muy tarde del trabajo y ya no puedo”. ¿Qué haces?",[["Digo “eso no es mi problema”.",0,"Saber escuchar es una habilidad clave de la fase de discusión."],["Parafraseo: “Entonces el problema es el horario, ¿no?” y pregunto qué le funcionaría.",2,"Escuchar y confirmar revela intereses complementarios."],["Le explico por qué tengo razón.",1,"Transmitir tu mensaje ayuda, pero sin escuchar es monólogo."]]],
+["Propuesta","Buscan una solución. ¿Qué propones?",[["Alternar días: tú lavas entre semana, yo en fines de semana, y revisamos en un mes.",2,"Propuesta adaptada a ambos y con seguimiento: ganar-ganar."],["Que lave siempre quien más ensucie, sin más.",1,"Razonable, pero difícil de medir y puede generar nuevas fricciones."],["O lavas tú todo o me voy.",0,"Un ultimátum rompe la relación que quieres mantener."]]]]},
+{id:"auto",k:"c",e:"🚗",n:"El auto del tianguis",g:"linear-gradient(135deg,#f9d423,#e65c00)",d:"Quieres un auto usado, pero el vendedor pide mucho. Regateo versus acuerdo inteligente.",st:[
+["Preparación","Ves un sedán a $95,000. Antes de ir, ¿qué haces?",[["Voy sin saber precios; ya veré.",0,"Un buen negociador está bien informado de lo que negocia."],["Investigo precios de mercado y fijo mi tope y mi alternativa.",2,"Preparar estrategia y alternativas te da poder real."],["Llevo todo mi efectivo para impresionar.",0,"Mostrar tu límite te quita margen de maniobra."]]],
+["Señales","El vendedor mira su reloj y menciona que “hay otro interesado”. ¿Cómo lo lees?",[["Pago de inmediato por miedo a perderlo.",0,"Reaccionar sin analizar señales te hace ceder de más."],["Noto la presión de tiempo y pregunto qué le urge cerrar hoy.",2,"Identificar mensajes verbales y de actitud abre información útil."],["Le digo que seguro miente.",0,"Acusar daña la confianza, variable clave del proceso."]]],
+["Intercambio","Te baja a $88,000. Tú tienes $82,000. ¿Y ahora?",[["Ofrezco $82,000 y garantía mecánica de 30 días por escrito.",2,"Dar y recibir con creatividad: él cierra hoy, tú reduces riesgo."],["Subo a $85,000 sin pedir nada.",1,"Cedes valor sin intercambio."],["Me voy sin dejar contacto.",0,"Cierras la puerta a una relación futura."]]]]},
+{id:"renta",k:"c",e:"🏠",n:"La renta sube",g:"linear-gradient(135deg,#43cea2,#185a9d)",d:"Tu casera anuncia un aumento del 20 %. Quieres quedarte, ella quiere un buen inquilino.",st:[
+["Preparación","Te llega el aviso de aumento. Antes de reunirte con ella, lo más estratégico es…",[["Reunir qué rentas hay en la zona y cuánto llevas pagando puntual.",2,"Argumentos con datos y escenarios positivos y negativos."],["Enojarte y llamar de inmediato.",0,"La emoción sin plan debilita tu posición."],["Empezar a empacar.",1,"Tener alternativa ayuda, pero no es una estrategia completa."]]],
+["Discusión","Ella dice: “Todo está más caro”. ¿Cómo respondes?",[["“Entonces no es por mí, es por sus gastos; cuénteme.”",2,"Escuchar descubre el interés real: mantenerse sin pérdidas."],["“Pues yo no pago más.”",0,"Posición cerrada, sin información nueva."],["“Tiene razón, pago lo que sea.”",0,"Ceder todo no es negociar."]]],
+["Cierre","Ambos están cerca de un acuerdo.",[["Propongo 10 % ahora, contrato a 2 años y pago adelantado de un mes.",2,"Beneficio mutuo: ella gana estabilidad, tú previsibilidad."],["Pido 0 % y que se resuelva.",0,"Ignorar sus intereses vuelve inviable el trato."],["Acepto el 20 %, pero guardo rencor.",1,"Cerraste, pero el perdedor tiende a revertir el equilibrio."]]]]},
+{id:"huelga",k:"s",e:"🏭",n:"Huelga en la planta",g:"linear-gradient(135deg,#232526,#c0392b)",d:"Un sindicato y la dirección de una empresa cara a cara. Si fracasan, la planta cierra. Inspirado en los casos del capítulo.",st:[
+["Preparación","Eres el director. Mañana hay mesa con el sindicato. ¿Qué haces primero?",[["Defino my postura final y no la muevo.",0,"La rigidez lleva al fracaso, como en el caso de Firestone."],["Mapeo intereses de ambas partes, objeciones probables y escenarios.",2,"Preparación estratégica: conoce motivaciones, anticipa objeciones."],["Delego todo a abogados.",1,"Apoyo útil, pero el directivo debe desarrollar su habilidad negociadora."]]],
+["Marco","El sindicato propone otro formato: charlas con un mediador de cada sector.",[["Acepto charlas tripartitas por sector.",2,"En el caso de Francia, el marco tripartito aceleró la solución."],["Exijo negociar solo en mi oficina.",0,"El marco (lugar, formato) también es variable de la negociación."],["Rechazo todo hasta que levanten el paro.",0,"Condicionar escala el conflicto."]]],
+["Acuerdo","El líder sindical ofrece volver a labores si hay reforma gradual de prestaciones.",[["Acuerdo gradual, revisión semestral y resumo lo que ambos ganamos.",2,"Resumir ventajas de la otra parte consolida el acuerdo."],["Acepto, pero presumo la victoria en prensa.",0,"La humildad es clave: vanagloriarse reabre el conflicto."],["Pido más tiempo sin dar fecha.",1,"Ganas tiempo, pero pierdes confianza."]]]]},
+{id:"japon",k:"s",e:"🌏",n:"Proveedor de otro mundo",g:"linear-gradient(135deg,#7f00ff,#e100ff 60%,#ff6a88)",d:"Un contrato clave con un proveedor de otra cultura. Aquí el protocolo y el idioma importan tanto como el precio.",st:[
+["Preparación","Recibirás a la delegación de tu proveedor asiático. ¿Cómo te preparas?",[["Estudio su protocolo (saludo, tarjetas, vestimenta) y contrato intérprete.",2,"Variables secundarias: protocolo, comunicación e idioma."],["Uso el mismo estilo directo de siempre.",0,"La habilidad multicultural es esencial hoy."],["Solo preparo mi presentación de precios.",1,"Cubre el fondo, descuidas la forma."]]],
+["Señales","Tu contraparte guarda silencio tras tu oferta y no da respuesta.",[["Rompo el silencio bajando el precio.",0,"Interpretaste el silencio como rechazo y cediste sin necesidad."],["Hago una pausa, observo y pregunto qué aspecto desea revisar.",2,"Los gestos y silencios son lenguaje simbólico según la cultura."],["Insisto en que decidan hoy.",0,"Presionar el tiempo ofende en muchas culturas."]]],
+["Cierre","La contraparte pide más plazo de pago.",[["Concedo plazo a cambio de volumen mayor y entrega escalonada.",2,"Intercambio creativo que fortalece la relación."],["Me niego por completo.",0,"Cierre rígido, sin intereses complementarios."],["Acepto todo y dejo el trato sin cláusulas.",1,"Sin alcances claros hay problemas futuros."]]]]},
+{id:"cumbre",k:"s",e:"🏛️",n:"Cumbre bajo tensión",g:"linear-gradient(135deg,#0f2027,#2c5364 60%,#f4b400)",d:"En plena cumbre, un líder insulta a tu delegación. Tienes segundos para decidir. Basado en el caso de las cumbres tensas del libro.",st:[
+["Señales","En el plenario, un presidente descalifica públicamente a un aliado tuyo. Todos te miran.",[["Le respondo con enojo y señalándole.",0,"Baja inteligencia emocional: escala el conflicto en público."],["Respiro, pido la palabra y propongo volver al tema con respeto.",2,"Control emocional y redirección al fondo del asunto."],["Abandono la sala.",0,"Retirarse cierra la puerta al acuerdo."]]],
+["Discusión","Una mediadora cede la palabra a otro delegado. Tú puedes aprovechar para…",[["Dejar claro que discrepas, pero sin descalificar.",2,"Se puede discrepar radicalmente sin caer en la descalificación."],["Atacar su historial personal.",0,"El ataque personal destruye la relación."],["Quedarme callado todo el día.",1,"Evitas el conflicto, pero no defiendes intereses."]]],
+["Acuerdo","Al cierre, tienen margen para un tratado comercial modesto.",[["Resumo avances de ambos y ofrezco un beneficio adicional menor.",2,"Si queda margen, aporta un beneficio más para tu interlocutor."],["Exijo todo o nada.",0,"Si one gana y otro pierde, los papeles se invertirán."],["Firmo rápido sin leer detalles.",0,"Siempre hay que ser estratega hasta el último punto."]]]]},
+{id:"aumento",k:"s",e:"💼",n:"Pedir un aumento",g:"linear-gradient(135deg,#00c6ff,#0072ff)",d:"Quieres un aumento y tu jefa tiene un presupuesto limitado.",st:[
+["Preparación","Pedirás un aumento. ¿Cómo te preparas?",[["Junto resultados, el valor de mercado de mi puesto y qué le preocupa a mi jefa.",2,"Conocer intereses y datos fortalece tu argumentación."],["Voy y digo que me urge el dinero.",0,"Tu necesidad personal no es argumento para la otra parte."],["Espero a que ella lo note sola.",1,"Sin iniciativa no hay negociación."]]],
+["Propuesta","Ella dice que no hay presupuesto este trimestre.",[["Propongo un ajuste en dos etapas con metas medibles.",2,"Adaptas la oferta a las restricciones de ambas partes."],["Amenazo con renunciar.",0,"Una amenaza sin alternativa real daña la relación."],["Acepto y no toco el tema otra vez.",1,"Evitas el conflicto pero no resuelves tu interés."]]],
+["Cierre","Aceptó la propuesta por etapas.",[["Resumo lo acordado por escrito y fijo fecha de revisión.",2,"Un acuerdo claro evita malentendidos."],["Presumo con mis compañeros.",0,"La humildad evita reabrir conflictos."],["Lo dejo todo de palabra.",1,"Sin registro, el acuerdo es frágil."]]]]},
+{id:"prorroga",k:"c",e:"📚",n:"Prórroga con el maestro",g:"linear-gradient(135deg,#ff9966,#ff5e62)",d:"Necesitas más tiempo para un proyecto y tu maestro valora la puntualidad.",st:[
+["Preparación","Sabes que no llegarás a tiempo. ¿Qué haces?",[["Pido cita antes de la fecha con un avance que mostrar.",2,"Anticiparse y mostrar avance genera confianza."],["Entrego tarde sin avisar.",0,"Sin comunicación pierdes credibilidad."],["Pido prórroga por mensaje a medianoche.",1,"Algo es mejor que nada, pero la forma importa."]]],
+["Discusión","El maestro dice: “Todos tuvieron el mismo plazo”.",[["Reconozco que es justo y pregunto qué condiciones lo harían aceptable.",2,"Escuchar y buscar alternativas mantiene el diálogo."],["Le digo que es injusto.",0,"Acusar cierra la conversación."],["Invento una excusa dramática.",0,"Perder credibilidad cuesta más que el plazo."]]],
+["Acuerdo","Hay apertura para darte dos días.",[["Entrego un avance mañana y el final en dos días.",2,"Das algo a cambio: ganar-ganar."],["Pido una semana completa.",1,"Exceder lo razonable tensa la negociación."],["Acepto sin preguntar los criterios.",1,"Falta claridad sobre los alcances."]]]]},
+{id:"permiso",k:"c",e:"🏖️",n:"Permiso con papá",g:"linear-gradient(135deg,#56ab2f,#a8e063)",d:"Quieres ir de viaje con amigos. Tu papá tiene dudas y quiere confiar en ti.",st:[
+["Preparación","Antes de pedir el permiso…",[["Preparo itinerario, contactos y plan de regreso, y pienso qué le preocupa.",2,"Anticipar objeciones es parte de la preparación."],["Lo pido a último minuto.",0,"El tiempo es una variable: la urgencia genera rechazo."],["Pido que mi mamá lo convenza.",1,"Sin hablar tú, no negocias."]]],
+["Discusión","Tu papá dice: “Me preocupa que pase algo”.",[["Le pregunto qué le daría tranquilidad y propongo avisar cada tarde.",2,"Identificas el interés real y ofreces solución."],["Le digo que ya soy grande.",0,"No respondes a su preocupación."],["Me enojo y me voy.",0,"La relación futura importa."]]],
+["Cierre","Casi aceptan.",[["Acepto compartir ubicación y regresar el domingo temprano.",2,"Cada uno cede algo y gana confianza."],["Exijo irme sin condiciones.",0,"Sin intercambio no hay acuerdo."],["Cancelo el viaje.",1,"Evitas el conflicto, pero ambos pierden."]]]]},
+{id:"fusion",k:"s",e:"🏢",n:"Fusión de startups",g:"linear-gradient(135deg,#1e3c72,#2a5298 60%,#6dd5ed)",d:"Dos empresas pequeñas evalúan unirse. Hay egos, acciones y cultura en juego.",st:[
+["Preparación","Eres cofundador. Antes de reunirte con la otra empresa…",[["Defino qué aportamos cada uno, mis límites y mi alternativa sin fusión.",2,"Conocer tu estrategia y tus alternativas da poder."],["Prometo todo para que firmen ya.",0,"Sin límites claros cedes el control."],["Dejo que ellos propongan primero.",1,"Sin análisis, solo reaccionas."]]],
+["Intercambio","Piden 60 % de la sociedad; tú quieres 50 %.",[["Comparo aportaciones y propongo 55/45 con liderazgos compartidos.",2,"Descubres puntos complementarios."],["Me levanto de la mesa.",0,"Ruptura prematura."],["Acepto 60 % para no perder el trato.",0,"Perder equilibrio genera resentimiento."]]],
+["Acuerdo","Falta firmar.",[["Reviso cultura, roles y salidas por escrito y resumo lo que ambos ganamos.",2,"Un acuerdo duradero cuida fondo y forma."],["Firmo de prisa por presión de inversionistas.",0,"Hay que ser estratega hasta el último punto."],["Firmo sin hablar de roles.",1,"La ambigüedad genera problemas futuros."]]]]},
+{id:"trueque",k:"s",e:"🚢",n:"El trueque argentino",g:"linear-gradient(135deg,#093028,#237a57)",d:"Un país sin dinero suficiente quiere construir un palacio con piezas traídas de otro continente. ¿Qué ofrece a cambio? Inspirado en el caso del libro.",st:[
+["Preparación","Eres el negociador. ¿Qué haces primero?",[["Analizo qué produce mi país que ellos necesiten.",2,"Identificar valor complementario es la base del ganar-ganar."],["Pido todo a crédito sin ofrecer nada.",0,"No hay beneficio para la otra parte."],["Copio la propuesta de otro país.",1,"Sin adaptarla a sus necesidades no convence."]]],
+["Propuesta","Los proveedores dudan de aceptar mercancía en lugar de dinero.",[["Presento calidad, volumen y calendario de entregas garantizado.",2,"Saber vender la propuesta con análisis."],["Les digo que no tienen opción.",0,"Presión sin argumentos."],["Reduzco lo ofrecido sin explicar.",0,"Genera desconfianza."]]],
+["Intercambio","Piden entregas más rápidas.",[["Adelanto parte a cambio de pagos escalonados en mercancía.",2,"Dar y recibir con creatividad."],["Cierro la negociación.",0,"Pierdes la relación comercial."],["Acepto todo sin revisar costos.",1,"Faltan alcances claros."]]]]}
+];
+const done={};let tot=0,cur=null,si=0,pt=0,ans=false,chosen=[];
+const A=document.getElementById("app");
+const lvl=p=>p>=5?["Ganar-ganar","El acuerdo benefició a ambas partes."]:p>=3?["Acuerdo parcial","Hubo trato, pero se dejó valor sobre la mesa."]:["Ganar-perder","Alguien salió perdiendo y eso suele revertirse."];
+const tag=s=>`<span class="tag ${s.k}">${s.k=="c"?"COTIDIANA":"SERIA"}</span>`;
+const card=s=>`<div class="card" onclick="detail('${s.id}')"><div class="poster" style="--g:${s.g}">${tag(s)}${s.e}${done[s.id]!=null?`<span class="done">${done[s.id]}/6</span>`:""}</div><h3>${s.n}</h3><p>${s.st.length} etapas</p></div>`;
+const row=(t,l,id)=>`<div class="row" id="${id}"><h2>${t}</h2><div class="rail">${l.map(card).join("")}</div></div>`;
+function home(){const f=S[3];scrollTo(0,0);
+A.innerHTML=`<div class="hero" style="--g:${f.g}"><div class="big">${f.e}</div><div class="hero-in">${tag(f)}<span class="tag">DESTACADO</span><h1>${f.n}</h1><p style="color:#ddd">${f.d}</p><button class="btn" onclick="start('${f.id}')">▶ Comenzar</button><button class="btn o" onclick="detail('${f.id}')">ⓘ Detalles</button></div></div>
+<main>${row("Situaciones cotidianas",S.filter(s=>s.k=="c"),"c")}${row("Negociaciones serias",S.filter(s=>s.k=="s"),"s")}${row("Todas las series",S,"a")}</main>`}
+function go(id){home();document.getElementById(id).scrollIntoView({behavior:"smooth"})}
+function detail(id){const s=S.find(x=>x.id==id);scrollTo(0,0);
+const ph=new Set(s.st.map(x=>x[0]));
+A.innerHTML=`<div class="hero" style="--g:${s.g};min-height:300px"><div class="big">${s.e}</div><div class="hero-in"><span class="back" onclick="home()">← Volver</span><br>${tag(s)}<h1>${s.n}</h1><p style="color:#ddd">${s.d}</p><button class="btn" onclick="start('${s.id}')">▶ ${done[s.id]!=null?"Reintentar":"Comenzar simulación"}</button></div></div>
+<main><div class="wrap"><h2>Fases del capítulo 10 que pondrás a prueba</h2><div class="chips">${F.map(f=>`<span class="${ph.has(f)||(f=="Señales"&&s.st.some(x=>x[0]=="Marco"))?"on":""}">${f}</span>`).join("")}</div><p style="color:var(--mu);font-size:14px">${s.st.length} decisiones. Máximo: 6 puntos. Gana quien logra que ambas partes salgan beneficiadas.</p></div></main>`}
+function start(id){cur=S.find(x=>x.id==id);si=0;pt=0;chosen=[];play()}
+function play(){ans=false;const [fa,sit,op]=cur.st[si];scrollTo(0,0);
+A.innerHTML=`<main><div class="wrap"><span class="back" onclick="detail('${cur.id}')">← Salir de la simulación</span><div class="bar"><i style="width:${si/cur.st.length*100}%"></i></div>
+<div class="panel"><div class="phase">${cur.e} ${cur.n} · Fase: ${fa} · ${si+1}/${cur.st.length}</div><p style="font-size:18px;margin:10px 0 0">${sit}</p></div>
+${op.map((o,i)=>`<button class="opt" onclick="pick(${i})">${o[0]}</button>`).join("")}<div id="fb"></div></div></main>`}
+function pick(i){if(ans)return;ans=true;const o=cur.st[si][2];pt+=o[i][1];
+document.querySelectorAll(".opt").forEach((b,j)=>{b.disabled=true;b.classList.add(o[j][1]==2?"g":o[j][1]==1?"m":"b");if(j!=i)b.style.opacity=.55});
+const last=si==cur.st.length-1;
+document.getElementById("fb").innerHTML=`<div class="fb"><b>${o[i][1]==2?"✔ Excelente":o[i][1]==1?"◐ Aceptable":"✖ Mejorable"}.</b> ${o[i][2]}</div><button class="btn" onclick="next()">${last?"Ver resultado":"Siguiente →"}</button>`}
+function next(){si++;si<cur.st.length?play():end()}
+function end(){const [t,m]=lvl(pt);const prev=done[cur.id]||0;if(pt>prev){tot+=pt-prev;done[cur.id]=pt}else if(done[cur.id]==null)done[cur.id]=pt;
+document.getElementById("tp").textContent=tot;scrollTo(0,0);
+A.innerHTML=`<main><div class="wrap"><div class="panel" style="text-align:center"><div class="phase">${cur.e} ${cur.n}</div><div class="score">${pt}/6</div><h1>${t}</h1><p style="color:var(--mu)">${m}</p><p style="font-size:14px">Recuerda: negociar es un proceso de comunicación donde ambas partes llegan a un acuerdo y la relación se mantiene.</p><button class="btn" onclick="start('${cur.id}')">Reintentar</button><button class="btn o" onclick="home()">Más series</button></div></div></main>`}
+/* Anime: catálogo filtrado con los 4 animes con enlaces directos */
+const ANI=[
+{id:"spy",n:"SPY x FAMILY",cat:"Diplomacia y estrategia",g:"linear-gradient(135deg,#f7971e,#ffd200 40%,#ff5e62)",sy:"Un espía debe armar una familia falsa para acercarse a un objetivo, sin saber que su “hija” lee mentes y su “esposa” es asesina.",le:"Cada miembro oculta intereses. Practica leer señales verbales y de actitud, y negociar sin ver todas las cartas.",sc:"cumbre",url:"https://youtu.be/46owUpi6LTs?si=1-yL2IKeh7MzRIj3"},
+{id:"vinland",n:"Vinland Saga",cat:"Diplomacia y estrategia",g:"linear-gradient(135deg,#283048,#859398)",sy:"Un joven vikingo crece entre guerras y venganzas, y se cuestiona si existe otro camino distinto a la violencia.",le:"Si una parte gana y otra pierde, los papeles tienden a invertirse. Es el valor del ganar-ganar.",sc:"huelga",url:"https://youtu.be/o-0XmcPJPRE?si=t-n8p4gvKREGUeh1"},
+{id:"yona",n:"Yona of the Dawn",cat:"Diplomacia y estrategia",g:"linear-gradient(135deg,#cb2d3e,#ef473a 50%,#ffb347)",sy:"Una princesa pierde su trono y reúne aliados para recuperar su reino y proteger a su gente.",le:"Las alianzas se construyen entendiendo motivaciones propias y ajenas antes de proponer nada.",sc:"fusion",url:"https://youtu.be/mYSS78eKIEE?si=JfuysfQNrPBsQ_6B"},
+{id:"kings",n:"Ranking of Kings",cat:"Diplomacia y estrategia",g:"linear-gradient(135deg,#667db6,#0082c8 50%,#fbd3e9)",sy:"Bojji, un príncipe sordo y pequeño, sueña con convertirse en el mejor rey del mundo.",le:"La comunicación va más allá de las palabras: gestos, actitud y empatía abren acuerdos.",sc:"trueque",url:"https://youtu.be/jH5tZWnZpgo?si=8GIrFZnJsvMIAvcE"}
+];
+const CATS=[...new Set(ANI.map(a=>a.cat))];
+const acard=a=>`<div class="card" onclick="anime('${a.id}')"><div class="poster" style="--g:${a.g}"><span class="tag">ANIME</span><b style="font-size:84px">${a.n[0]}</b></div><h3>${a.n}</h3><p>${a.cat}</p></div>`;
+const HF=[["s","huelga"],["a","spy"],["s","auto"],["a","kings"],["s","cumbre"]];let ht,hi=0;
+function hs(i){const h=document.getElementById("hb");if(!h){clearInterval(ht);return}hi=i;const [t,id]=HF[i];const x=t=="s"?S.find(s=>s.id==id):ANI.find(a=>a.id==id);
+h.style.setProperty("--g",x.g);document.getElementById("hbig").textContent=x.e||x.n[0];
+document.getElementById("hin").innerHTML=`${t=="s"?tag(x):'<span class="tag">ANIME</span>'}<span class="tag">DESTACADO</span><h1>${x.n}</h1><p style="color:#ddd">${x.d||x.sy}</p><button class="btn" onclick="${t=="s"?`start('${id}')`:`anime('${id}')`}">▶ ${t=="s"?"Comenzar":"Ver ahora"}</button><button class="btn o" onclick="${t=="s"?`detail('${id}')`:`anime('${id}')`}">ⓘ Detalles</button>`;
+document.getElementById("dots").innerHTML=HF.map((_,j)=>`<i class="${j==i?"on":""}" onclick="clearInterval(ht);hs(${j})"></i>`).join("")}
+function home(){clearInterval(ht);scrollTo(0,0);const dn=S.filter(s=>done[s.id]!=null);
+A.innerHTML=`<div class="hero" id="hb"><div class="big" id="hbig"></div><div class="hero-in" id="hin"></div><div class="dots" id="dots"></div></div>
+<div class="chipbar"><a onclick="go('c')">Cotidianas</a><a onclick="go('s')">Serias</a>${CATS.map((c,i)=>`<a onclick="go('k${i}')">${c}</a>`).join("")}</div>
+<main>${dn.length?`<div class="row"><h2>Continuar viendo</h2><div class="rail">${dn.map(s=>`<div class="th" onclick="detail('${s.id}')"><div class="poster" style="--g:${s.g}">${s.e}</div><div class="bar"><i style="width:${done[s.id]/6*100}%"></i></div><h3 style="font-size:14px;margin:8px 0 0">${s.n}</h3></div>`).join("")}</div></div>`:""}
+<div class="row"><h2>Top 10 escenarios</h2><div class="rail">${S.slice(0,10).map((s,i)=>`<div class="tp" onclick="detail('${s.id}')"><i>${i+1}</i><div class="poster" style="--g:${s.g}">${s.e}</div></div>`).join("")}</div></div>
+${row("Situaciones cotidianas",S.filter(s=>s.k=="c"),"c")}${row("Negociaciones serias",S.filter(s=>s.k=="s"),"s")}
+${CATS.map((c,i)=>`<div class="row" id="k${i}"><h2>Anime · ${c}</h2><div class="rail">${ANI.filter(a=>a.cat==c).map(acard).join("")}</div></div>`).join("")}</main>
+<div class="foot">Simulador educativo basado en el capítulo 10 de Habilidades directivas. Proyecto de fans, sin afiliación con Crunchyroll.</div>`;
+hs(0);ht=setInterval(()=>hs((hi+1)%HF.length),6000)}
+function anime(id){const a=ANI.find(x=>x.id==id),s=S.find(x=>x.id==a.sc);clearInterval(ht);scrollTo(0,0);
+A.innerHTML=`<div class="hero" style="--g:${a.g};min-height:320px"><div class="big">${a.n[0]}</div><div class="hero-in"><span class="back" onclick="home()">← Volver</span><br><span class="tag">ANIME</span><span class="tag">${a.cat.toUpperCase()}</span><h1>${a.n}</h1><p style="color:#ddd">${a.sy}</p><a class="btn a-btn" href="${a.url}" target="_blank" rel="noopener">▶ Ver episodio en YouTube</a></div></div>
+<main><div class="wrap"><div class="panel"><div class="phase">Lección de negociación</div><p>${a.le}</p><button class="btn" onclick="start('${s.id}')">Practicar: ${s.n}</button></div><p style="color:var(--mu);font-size:13px">El enlace abre directamente el episodio gratuito en YouTube.</p></div></main>`}
+function srch(v){v=v.replace(/[<>&"]/g,"").toLowerCase().trim();if(!v)return home();clearInterval(ht);
+const r=S.filter(s=>s.n.toLowerCase().includes(v)).map(card).concat(ANI.filter(a=>a.n.toLowerCase().includes(v)).map(acard));
+A.innerHTML=`<main><h2>Resultados para “${v}”</h2><div class="rail" style="flex-wrap:wrap">${r.join("")||"<p style='color:var(--mu)'>Sin resultados.</p>"}</div></main>`}
+home();
+</script></body></html>
